@@ -2,7 +2,7 @@
 wxwidgets_path          = ../../../../3rdparty/wxwidgets
 wxwidgets_include_paths = -I$(wxwidgets_path)/compiles/linux/lib/wx/include/gtk2-ansi-release-static-2.8/ \
                           -I$(wxwidgets_path)/include
-wxwidgets_lib_paths     = -L../../../3rdparty/wxwidgets/compiles/linux/lib
+wxwidgets_lib_paths     = -L$(wxwidgets_path)/compiles/linux/lib
 
 # Cairo paths
 cairo_path          = ../../../../3rdparty/cairo
