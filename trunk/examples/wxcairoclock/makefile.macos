@@ -1,0 +1,39 @@
+# WxWidgets paths
+wxwidgets_path          = ../../../../3rdparty/wxwidgets
+wxwidgets_include_paths = -I$(wxwidgets_path)/compiles/macos/lib/wx/include/mac-ansi-release-static-2.8 \
+                          -I$(wxwidgets_path)/include \
+                          -I$(wxwidgets_path)/src/mac/carbon/morefilex
+wxwidgets_lib_paths     = -L$(wxwidgets_path)/compiles/macos/lib
+
+# Cairo paths
+cairo_path          = ../../../../3rdparty/cairo
+cairo_include_paths = -I$(cairo_path)/src
+
+# The main target for the wxCairoClock example program
+macos:
+	g++ -o main \
+            -D__WXMAC__ -DWX_PRECOMP -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES \
+            $(wxwidgets_include_paths) \
+            $(cairo_include_paths) \
+            -I/Developer/Headers/FlatCarbon -Wall -Wundef -Wno-ctor-dtor-privacy -O2 -fno-strict-aliasing -fno-common \
+            ./main.cpp wxcairoclock.cpp \
+            -framework QuickTime -framework IOKit -framework Carbon \
+            -framework Cocoa -framework System \
+            $(wxwidgets_lib_paths) \
+            -lz -lpthread -liconv -lwx_mac-2.8 -lwxtiff-2.8 -lwxjpeg-2.8 -lwxpng-2.8 -lwxexpat-2.8 \
+            -framework QuickTime -framework IOKit -framework Carbon -framework Cocoa -framework System \
+            -lz -lpthread -liconv -lcairo -framework WebKit
+
+	/Developer/Tools/Rez -d __DARWIN__ -t APPL -d __WXMAC__ -i $(wxwidgets_path)/include -o main Carbon.r main.r
+	/Developer/Tools/SetFile -a C main
+	mkdir -p main.app/Contents
+	mkdir -p main.app/Contents/MacOS
+	mkdir -p main.app/Contents/Resources
+	sed -e "s/IDENTIFIER/`echo . | sed -e 's,\.\./,,g' | sed -e 's,/,.,g'`/" \
+-e "s/EXECUTABLE/main/" \
+-e "s/VERSION/2.8.4/" \
+$(wxwidgets_path)/src/mac/carbon/Info.plist.in >main.app/Contents/Info.plist
+	echo -n "APPL????" >main.app/Contents/PkgInfo
+	ln -f main main.app/Contents/MacOS/main
+	cp -f $(wxwidgets_path)/src/mac/carbon/wxmac.icns main.app/Contents/Resources/wxmac.icns
+
