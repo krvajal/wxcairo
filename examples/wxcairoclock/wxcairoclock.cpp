@@ -480,7 +480,7 @@ void wxCairoClock::DrawClock(bool     use_cairo,
         cairo_fill(cairo_image);
 
         
-        // Now draw the circle inside the arrow
+        // now draw the circle inside the arrow
         cairo_set_source_rgb(cairo_image, 1, 1, 1);
         cairo_arc(cairo_image,
                   cx,
@@ -490,14 +490,14 @@ void wxCairoClock::DrawClock(bool     use_cairo,
                   2.0*PI);
         cairo_fill(cairo_image);
         
-        // Now draw the small minute markers
+        // now draw the small minute markers
         cairo_set_line_width(cairo_image, 1.2);
         cairo_set_source_rgb(cairo_image, 0, 0, 0);
         for(double index = 0; index < PI/2; index += (PI/30))
         {
             double start = 0.94;
             
-            // Draw the markers at the bottom right half of the clock
+            // draw the markers at the bottom right half of the clock
             cairo_new_path(cairo_image);
             cairo_move_to(cairo_image,
                           cx + radius * start * cos(index),
@@ -512,7 +512,7 @@ void wxCairoClock::DrawClock(bool     use_cairo,
             cairo_fill(cairo_image);
             
             
-            // Draw the markers at the bottom left half of the clock
+            // draw the markers at the bottom left half of the clock
             cairo_new_path(cairo_image);
             cairo_move_to(cairo_image,
                           cx - radius * start * cos(index),
@@ -527,7 +527,7 @@ void wxCairoClock::DrawClock(bool     use_cairo,
             cairo_fill(cairo_image);
             
             
-            // Draw the markers at the top left half of the clock
+            // draw the markers at the top left half of the clock
             cairo_new_path(cairo_image);
             cairo_move_to(cairo_image,
                           cx - radius * start * cos(index),
@@ -542,7 +542,7 @@ void wxCairoClock::DrawClock(bool     use_cairo,
             cairo_fill(cairo_image);
             
             
-            // Draw the markers at the top right half of the clock
+            // draw the markers at the top right half of the clock
             cairo_new_path(cairo_image);
             cairo_move_to(cairo_image,
                           cx + radius * start * cos(index),
@@ -559,14 +559,14 @@ void wxCairoClock::DrawClock(bool     use_cairo,
         
         
         
-        // Now draw the markers
+        // now draw the markers
         cairo_set_line_width(cairo_image, 1.2);
         cairo_set_source_rgb(cairo_image, 0.5, 0.5, 0.5);
         for(double index = 0; index <= PI/2; index += (PI/6))
         {
             double start = 0.86;
             
-            // Draw the markers at the bottom right half of the clock
+            // draw the markers at the bottom right half of the clock
             cairo_new_path(cairo_image);
             cairo_move_to(cairo_image,
                           cx + radius * start * cos(index),
@@ -581,7 +581,7 @@ void wxCairoClock::DrawClock(bool     use_cairo,
             cairo_fill(cairo_image);
             
             
-            // Draw the markers at the bottom left half of the clock
+            // draw the markers at the bottom left half of the clock
             cairo_new_path(cairo_image);
             cairo_move_to(cairo_image,
                           cx - radius * start * cos(index),
@@ -596,7 +596,7 @@ void wxCairoClock::DrawClock(bool     use_cairo,
             cairo_fill(cairo_image);
             
             
-            // Draw the markers at the top left half of the clock
+            // draw the markers at the top left half of the clock
             cairo_new_path(cairo_image);
             cairo_move_to(cairo_image,
                           cx - radius * start * cos(index),
@@ -611,7 +611,7 @@ void wxCairoClock::DrawClock(bool     use_cairo,
             cairo_fill(cairo_image);
             
             
-            // Draw the markers at the top right half of the clock
+            // draw the markers at the top right half of the clock
             cairo_new_path(cairo_image);
             cairo_move_to(cairo_image,
                           cx + radius * start * cos(index),
@@ -630,114 +630,114 @@ void wxCairoClock::DrawClock(bool     use_cairo,
     {
         wxDC* dc = (wxDC*)drawer;
         
-        // Draw the background for the clock
+        // draw the background for the clock
         dc->SetPen(*wxTRANSPARENT_PEN);
         dc->SetBrush(*wxBLACK_BRUSH);
-        dc->DrawCircle(cx, cy, radius+30);
+        dc->DrawCircle((int)cx, (int)cy, (int)radius+30);
         
         dc->SetBrush(*wxWHITE_BRUSH);
-        dc->DrawCircle(cx,cy, radius+25);
+        dc->DrawCircle((int)cx, (int)cy, (int)radius+25);
         
         dc->SetPen(*wxBLACK_PEN);
         wxBrush brush(wxColour(0xC0, 0xC0, 0xC0));
         dc->SetBrush(brush);
-        dc->DrawCircle(cx,cy, radius);
+        dc->DrawCircle((int)cx,(int)cy, (int)radius);
         
         dc->SetPen(*wxTRANSPARENT_PEN);
         brush.SetColour(wxColour(0xE0, 0xE0, 0xE0));
         dc->SetBrush(brush);
-        dc->DrawCircle(cx,cy, radius-10);
+        dc->DrawCircle((int)cx, (int)cy, (int)radius-10);
         
         
-        // Now draw the hour arrow
+        // now draw the hour arrow
         dc->SetPen(*wxTRANSPARENT_PEN);
         dc->SetBrush(*wxBLACK_BRUSH);
         wxPoint points[6];
-        points[0].x = cx - radius * 0.05 * sin(m_hour_angle);
-        points[0].y = cy + radius * 0.05 * cos(m_hour_angle);
-        points[1].x = cx + radius * 0.75 * cos(m_hour_angle);
-        points[1].y = cy + radius * 0.75 * sin(m_hour_angle);
-        points[2].x = cx + radius * 0.05 * sin(m_hour_angle);
-        points[2].y = cy - radius * 0.05 * cos(m_hour_angle);
-        points[3].x = cx - radius * 0.05 * cos(m_hour_angle);
-        points[3].y = cy - radius * 0.05 * sin(m_hour_angle);
-        points[4].x = cx - radius * 0.05 * sin(m_hour_angle);
-        points[4].y = cy + radius * 0.05 * cos(m_hour_angle);
+        points[0].x = (int)(cx - radius * 0.05 * sin(m_hour_angle));
+        points[0].y = (int)(cy + radius * 0.05 * cos(m_hour_angle));
+        points[1].x = (int)(cx + radius * 0.75 * cos(m_hour_angle));
+        points[1].y = (int)(cy + radius * 0.75 * sin(m_hour_angle));
+        points[2].x = (int)(cx + radius * 0.05 * sin(m_hour_angle));
+        points[2].y = (int)(cy - radius * 0.05 * cos(m_hour_angle));
+        points[3].x = (int)(cx - radius * 0.05 * cos(m_hour_angle));
+        points[3].y = (int)(cy - radius * 0.05 * sin(m_hour_angle));
+        points[4].x = (int)(cx - radius * 0.05 * sin(m_hour_angle));
+        points[4].y = (int)(cy + radius * 0.05 * cos(m_hour_angle));
         dc->DrawPolygon(5, points, 0, 0);
         
-        // Minute arrow
-        points[0].x = cx - radius * 0.04 * sin(m_minute_angle);
-        points[0].y = cy + radius * 0.04 * cos(m_minute_angle);
-        points[1].x = cx + radius * 0.95 * cos(m_minute_angle);
-        points[1].y = cy + radius * 0.95 * sin(m_minute_angle);
-        points[2].x = cx + radius * 0.04 * sin(m_minute_angle);
-        points[2].y = cy - radius * 0.04 * cos(m_minute_angle);
-        points[3].x = cx - radius * 0.04 * cos(m_minute_angle);
-        points[3].y = cy - radius * 0.04 * sin(m_minute_angle);
-        points[4].x = cx - radius * 0.04 * sin(m_minute_angle);
-        points[4].y = cy + radius * 0.04 * cos(m_minute_angle);
+        // minute arrow
+        points[0].x = (int)(cx - radius * 0.04 * sin(m_minute_angle));
+        points[0].y = (int)(cy + radius * 0.04 * cos(m_minute_angle));
+        points[1].x = (int)(cx + radius * 0.95 * cos(m_minute_angle));
+        points[1].y = (int)(cy + radius * 0.95 * sin(m_minute_angle));
+        points[2].x = (int)(cx + radius * 0.04 * sin(m_minute_angle));
+        points[2].y = (int)(cy - radius * 0.04 * cos(m_minute_angle));
+        points[3].x = (int)(cx - radius * 0.04 * cos(m_minute_angle));
+        points[3].y = (int)(cy - radius * 0.04 * sin(m_minute_angle));
+        points[4].x = (int)(cx - radius * 0.04 * sin(m_minute_angle));
+        points[4].y = (int)(cy + radius * 0.04 * cos(m_minute_angle));
         dc->DrawPolygon(5, points, 0, 0);
         
-        // Draw the second hand in red
+        // draw the second hand in red
         brush.SetColour(wxColour(0x70, 0x0, 0x0));
         dc->SetBrush(brush);
-        points[0].x = cx - radius * 0.02 * sin(m_second_angle);
-        points[0].y = cy + radius * 0.02 * cos(m_second_angle);
-        points[1].x = cx + radius * 0.98 * cos(m_second_angle);
-        points[1].y = cy + radius * 0.98 * sin(m_second_angle);
-        points[2].x = cx + radius * 0.02 * sin(m_second_angle);
-        points[2].y = cy - radius * 0.02 * cos(m_second_angle);
-        points[3].x = cx - radius * 0.02 * cos(m_second_angle);
-        points[3].y = cy - radius * 0.02 * sin(m_second_angle);
-        points[4].x = cx - radius * 0.02 * sin(m_second_angle);
-        points[4].y = cy + radius * 0.02 * cos(m_second_angle);
+        points[0].x = (int)(cx - radius * 0.02 * sin(m_second_angle));
+        points[0].y = (int)(cy + radius * 0.02 * cos(m_second_angle));
+        points[1].x = (int)(cx + radius * 0.98 * cos(m_second_angle));
+        points[1].y = (int)(cy + radius * 0.98 * sin(m_second_angle));
+        points[2].x = (int)(cx + radius * 0.02 * sin(m_second_angle));
+        points[2].y = (int)(cy - radius * 0.02 * cos(m_second_angle));
+        points[3].x = (int)(cx - radius * 0.02 * cos(m_second_angle));
+        points[3].y = (int)(cy - radius * 0.02 * sin(m_second_angle));
+        points[4].x = (int)(cx - radius * 0.02 * sin(m_second_angle));
+        points[4].y = (int)(cy + radius * 0.02 * cos(m_second_angle));
         dc->DrawPolygon(5, points, 0, 0);
         
-        // Now draw the circle inside the arrow
+        // now draw the circle inside the arrow
         dc->SetBrush(*wxWHITE_BRUSH);
-        dc->DrawCircle(cx,cy, radius*0.02);
+        dc->DrawCircle((int)cx, (int)cy, (int)(radius*0.02));
         
         
-        // Now draw the minute/second markers
+        // now draw the minute/second markers
         dc->SetBrush(*wxBLACK_BRUSH);
         for(double index = 0; index < PI/2; index += (PI/30))
         {
             double start = 0.94;
             
-            // Draw the markers at the bottom right half of the clock
-            points[0].x = cx + radius * start * cos(index);
-            points[0].y = cy + radius * start * sin(index);
-            points[1].x = cx + radius * cos(index - PI/240);
-            points[1].y = cy + radius * sin(index - PI/240);
-            points[2].x = cx + radius * cos(index + PI/240);
-            points[2].y = cy + radius * sin(index + PI/240);
+            // draw the markers at the bottom right half of the clock
+            points[0].x = (int)(cx + radius * start * cos(index));
+            points[0].y = (int)(cy + radius * start * sin(index));
+            points[1].x = (int)(cx + radius * cos(index - PI/240));
+            points[1].y = (int)(cy + radius * sin(index - PI/240));
+            points[2].x = (int)(cx + radius * cos(index + PI/240));
+            points[2].y = (int)(cy + radius * sin(index + PI/240));
             dc->DrawPolygon(3, points, 0, 0);
             
-            // Draw the markers at the bottom left half of the clock
-            points[0].x = cx - radius * start * cos(index);
-            points[0].y = cy + radius * start * sin(index);
-            points[1].x = cx - radius * cos(index - PI/240);
-            points[1].y = cy + radius * sin(index - PI/240);
-            points[2].x = cx - radius * cos(index + PI/240);
-            points[2].y = cy + radius * sin(index + PI/240);
+            // draw the markers at the bottom left half of the clock
+            points[0].x = (int)(cx - radius * start * cos(index));
+            points[0].y = (int)(cy + radius * start * sin(index));
+            points[1].x = (int)(cx - radius * cos(index - PI/240));
+            points[1].y = (int)(cy + radius * sin(index - PI/240));
+            points[2].x = (int)(cx - radius * cos(index + PI/240));
+            points[2].y = (int)(cy + radius * sin(index + PI/240));
             dc->DrawPolygon(3, points, 0, 0);
             
-            // Draw the markers at the top left half of the clock
-            points[0].x = cx - radius * start * cos(index);
-            points[0].y = cy - radius * start * sin(index);
-            points[1].x = cx - radius * cos(index - PI/240);
-            points[1].y = cy - radius * sin(index - PI/240);
-            points[2].x = cx - radius * cos(index + PI/240);
-            points[2].y = cy - radius * sin(index + PI/240);
+            // draw the markers at the top left half of the clock
+            points[0].x = (int)(cx - radius * start * cos(index));
+            points[0].y = (int)(cy - radius * start * sin(index));
+            points[1].x = (int)(cx - radius * cos(index - PI/240));
+            points[1].y = (int)(cy - radius * sin(index - PI/240));
+            points[2].x = (int)(cx - radius * cos(index + PI/240));
+            points[2].y = (int)(cy - radius * sin(index + PI/240));
             dc->DrawPolygon(3, points, 0, 0);
             
             // Draw the markers at the top right half of the clock
-            points[0].x = cx + radius * start * cos(index);
-            points[0].y = cy - radius * start * sin(index);
-            points[1].x = cx + radius * cos(index - PI/240);
-            points[1].y = cy - radius * sin(index - PI/240);
-            points[2].x = cx + radius * cos(index + PI/240);
-            points[2].y = cy - radius * sin(index + PI/240);
+            points[0].x = (int)(cx + radius * start * cos(index));
+            points[0].y = (int)(cy - radius * start * sin(index));
+            points[1].x = (int)(cx + radius * cos(index - PI/240));
+            points[1].y = (int)(cy - radius * sin(index - PI/240));
+            points[2].x = (int)(cx + radius * cos(index + PI/240));
+            points[2].y = (int)(cy - radius * sin(index + PI/240));
             dc->DrawPolygon(3, points, 0, 0);
         }
         
@@ -749,39 +749,39 @@ void wxCairoClock::DrawClock(bool     use_cairo,
             double start = 0.86;
             
             // Draw the markers at the bottom right half of the clock
-            points[0].x = cx + radius * start * cos(index);
-            points[0].y = cy + radius * start * sin(index);
-            points[1].x = cx + radius * cos(index - PI/200);
-            points[1].y = cy + radius * sin(index - PI/200);
-            points[2].x = cx + radius * cos(index + PI/200);
-            points[2].y = cy + radius * sin(index + PI/200);
+            points[0].x = (int)(cx + radius * start * cos(index));
+            points[0].y = (int)(cy + radius * start * sin(index));
+            points[1].x = (int)(cx + radius * cos(index - PI/200));
+            points[1].y = (int)(cy + radius * sin(index - PI/200));
+            points[2].x = (int)(cx + radius * cos(index + PI/200));
+            points[2].y = (int)(cy + radius * sin(index + PI/200));
             dc->DrawPolygon(3, points, 0, 0);
             
             // Draw the markers at the bottom left half of the clock
-            points[0].x = cx - radius * start * cos(index);
-            points[0].y = cy + radius * start * sin(index);
-            points[1].x = cx - radius * cos(index - PI/200);
-            points[1].y = cy + radius * sin(index - PI/200);
-            points[2].x = cx - radius * cos(index + PI/200);
-            points[2].y = cy + radius * sin(index + PI/200);
+            points[0].x = (int)(cx - radius * start * cos(index));
+            points[0].y = (int)(cy + radius * start * sin(index));
+            points[1].x = (int)(cx - radius * cos(index - PI/200));
+            points[1].y = (int)(cy + radius * sin(index - PI/200));
+            points[2].x = (int)(cx - radius * cos(index + PI/200));
+            points[2].y = (int)(cy + radius * sin(index + PI/200));
             dc->DrawPolygon(3, points, 0, 0);
             
             // Draw the markers at the top left half of the clock
-            points[0].x = cx - radius * start * cos(index);
-            points[0].y = cy - radius * start * sin(index);
-            points[1].x = cx - radius * cos(index - PI/200);
-            points[1].y = cy - radius * sin(index - PI/200);
-            points[2].x = cx - radius * cos(index + PI/200);
-            points[2].y = cy - radius * sin(index + PI/200);
+            points[0].x = (int)(cx - radius * start * cos(index));
+            points[0].y = (int)(cy - radius * start * sin(index));
+            points[1].x = (int)(cx - radius * cos(index - PI/200));
+            points[1].y = (int)(cy - radius * sin(index - PI/200));
+            points[2].x = (int)(cx - radius * cos(index + PI/200));
+            points[2].y = (int)(cy - radius * sin(index + PI/200));
             dc->DrawPolygon(3, points, 0, 0);
             
             // Draw the markers at the top right half of the clock
-            points[0].x = cx + radius * start * cos(index);
-            points[0].y = cy - radius * start * sin(index);
-            points[1].x = cx + radius * cos(index - PI/200);
-            points[1].y = cy - radius * sin(index - PI/200);
-            points[2].x = cx + radius * cos(index + PI/200);
-            points[2].y = cy - radius * sin(index + PI/200);
+            points[0].x = (int)(cx + radius * start * cos(index));
+            points[0].y = (int)(cy - radius * start * sin(index));
+            points[1].x = (int)(cx + radius * cos(index - PI/200));
+            points[1].y = (int)(cy - radius * sin(index - PI/200));
+            points[2].x = (int)(cx + radius * cos(index + PI/200));
+            points[2].y = (int)(cy - radius * sin(index + PI/200));
             dc->DrawPolygon(3, points, 0, 0);
         }
     }
@@ -921,6 +921,8 @@ void wxCairoClock::OnPaint(wxPaintEvent &WXUNUSED(event))
             cairo_destroy(cairo_image);
             
 #elif defined(__WXGTK__)
+            SetStatusText("Rendering directly to GDK surface using Cairo");
+
             // If it's GTK then use the gdk_cairo_create() method. The GdkDrawable object
             // is stored in m_window of the wxPaintDC.
             cairo_t* cairo_image = gdk_cairo_create(dc.m_window);
