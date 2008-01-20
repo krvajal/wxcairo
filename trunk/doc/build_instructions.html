@@ -1,0 +1,25 @@
+<html>
+<head>
+</head>
+
+<body>
+
+<h2>Directory Structure</h2>
+
+<p>The projects and makefiles are all setup assuming the following
+   directory structure:</p>
+   
+<pre>
+   3rdparty/wxwidgets
+   3rdparty/cairo
+   wxcairo/...
+</pre>
+
+<h2>Building wxWidgets</h2>
+
+<p>On windows I usually build wxWidgets using the following commands:</p>
+<pre>
+   vsvars32
+   cd 3rdparty\build\msw\
+   nmake /f makefile.vc MONOLITHIC=1 SHARED=0
+</body>
