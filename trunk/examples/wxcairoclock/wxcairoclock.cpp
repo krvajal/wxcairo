@@ -367,6 +367,7 @@ void wxCairoClock::DrawClock(bool     use_cairo,
         cairo_rectangle(cairo_image, 0, 0, width, height);
         cairo_fill(cairo_image);
         cairo_stroke (cairo_image);
+
         
         // Draw the outermost circle which forms the 
         // black radius of the clock.
@@ -418,7 +419,6 @@ void wxCairoClock::DrawClock(bool     use_cairo,
                   2*PI);
         cairo_stroke(cairo_image);
         
-
         // Now draw the hour arrow
         cairo_set_source_rgb(cairo_image, 0, 0, 0);
         cairo_new_path(cairo_image);
