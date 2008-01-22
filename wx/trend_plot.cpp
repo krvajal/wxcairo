@@ -33,7 +33,6 @@
 //|
 //+------------------------------------------------------------------------------
 #include "trend_plot.h"
-//#include "trend_plot_config.h"
 
 #if defined(__WXMSW__)
 #    include <cairo-win32.h>
