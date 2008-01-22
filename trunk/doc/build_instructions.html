@@ -15,6 +15,23 @@
    wxcairo/...
 </pre>
 
+<h2>Building Cairo</h2>
+
+
+<h3>Building on a Mac</h3>
+
+<p>I had to install the following packages via Fink:</p>
+<pre>
+   fink install freetype219
+   fink install fontconfig2-dev
+</pre>
+
+<p>Then I compiled Cairo using the following options</p>
+<pre>
+   ./configure --disable-xlib --enable-quartz=yes --enable-atsui=yes --enable-freetype=no
+   make
+</pre>
+
 <h2>Building wxWidgets</h2>
 
 <p>On windows I usually build wxWidgets using the following commands:</p>
