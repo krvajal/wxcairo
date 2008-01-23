@@ -64,7 +64,7 @@
 #include <wx/colordlg.h>
 #include <wx/artprov.h>
 
-#if (__WXDEBUG__) && (_DEBUG)
+#if defined(__WXDEBUG__) && defined(_DEBUG)
    #define new DEBUG_NEW
 #endif
 
