@@ -124,8 +124,16 @@ wxTrendPlot::wxTrendPlot(wxWindow* parent,
 
     // Create the popup menus
     m_popup_menu = new wxMenu("");
-    wxMenuItem* item = m_popup_menu->AppendCheckItem(wxID_ANY, "Antialias");
-    m_menu_antialias = item->GetId();
+    wxMenuItem* item = m_popup_menu->AppendRadioItem(wxID_ANY, "Native");
+    m_menu_native_render = item->GetId();
+    item = m_popup_menu->AppendRadioItem(wxID_ANY, "Cairo Buffer");
+    m_menu_cairo_render_buffer = item->GetId();
+    item = m_popup_menu->AppendRadioItem(wxID_ANY, "Cairo Native");
+    m_menu_cairo_render_native = item->GetId();
+    
+    m_popup_menu->Check(m_menu_cairo_render_native, true);
+    SetRenderer(RENDER_CAIRO_NATIVE);
+    
     item = m_popup_menu->Append(wxID_ANY, "Zoom in");
     m_menu_zoomin = item->GetId();
     item = m_popup_menu->Append(wxID_ANY, "Zoom out");
@@ -256,18 +264,44 @@ void wxTrendPlot::OnContextMenu(wxContextMenuEvent& event)
 }
 
 
+//+------------------------------------------------------------------------------
+//|
+//| NAME:
+//|    SetRenderer()
+//|
+//| PARAMETERS:
+//|    render (I) - The renderiing mode:
+//|                     RENDER_CAIRO_BUFFER
+//|                     RENDER_CAIRO_NATIVE
+//|                     RENDER_NATIVE
+//|
+//| FUNCTION:
+//|    This method is called to change the rendering mode for the demo app.
+//|
+//| RETURNS:
+//|    None.
+//|
+//+------------------------------------------------------------------------------
+void wxTrendPlot::SetRenderer(int renderer)
+{
+    m_renderer = renderer;
+    Refresh(false);
+}
+
+
 void wxTrendPlot::OnDoAction(wxCommandEvent& event)
 {
-    if(m_menu_antialias == event.GetId())
+    if(m_menu_native_render == event.GetId())
     {
-        if(m_antialiasing)
-        {
-            Antialias(false);
-        }
-        else
-        {
-            Antialias(true);
-        }
+        SetRenderer(RENDER_NATIVE);
+    }
+    else if(m_menu_cairo_render_buffer == event.GetId())
+    {
+        SetRenderer(RENDER_CAIRO_BUFFER);
+    }
+    else if(m_menu_cairo_render_native == event.GetId())
+    {
+        SetRenderer(RENDER_CAIRO_NATIVE);
     }
     else if(m_menu_pause == event.GetId())
     {
@@ -349,7 +383,10 @@ void wxTrendPlot::UpdatePlot(void)
     //}
 }
 
-void wxTrendPlot::DrawPlot(double start_x)
+
+void wxTrendPlot::Draw(bool     use_cairo,
+                       void*    drawer,
+                       double   start_x)
 {
     // If the plot is not active then don't bother
     // drawing it.
@@ -360,9 +397,9 @@ void wxTrendPlot::DrawPlot(double start_x)
     
     wxRect rect = GetClientRect();
   
-    if(m_antialiasing)
+    if(use_cairo)
     {
-        cairo_t* cairo_image = (cairo_t*)this->m_cairo_image;
+        cairo_t* cairo_image = (cairo_t*)drawer;
 
         // Clear the background and set it to white
         cairo_set_source_rgb (cairo_image, 1, 1, 1);
@@ -766,10 +803,7 @@ void wxTrendPlot::DrawPlot(double start_x)
     }
     else
     {
-        wxBitmap bmp;
-        
-        wxClientDC client_dc(this);
-        
+        wxDC* dc = (wxDC*)drawer;
         
         // If the start point wasn't overridden then use the stored
         // start point for this plot
@@ -784,12 +818,6 @@ void wxTrendPlot::DrawPlot(double start_x)
                 start_x = m_start_plot_x;
             }
         }
-        
-        // Create a double buffer to draw the plot
-        // on screen to prevent flicker from occuring.
-        wxBufferedDC dc;
-        dc.Init(&client_dc, bmp);
-        dc.Clear();
         
         int bottom_pad = 50;
         int top_pad    = 40;
@@ -823,13 +851,13 @@ void wxTrendPlot::DrawPlot(double start_x)
         {
             font.SetFamily(wxFONTFAMILY_ROMAN);
             font.SetPointSize(8);
-            dc.SetFont(font);
+            dc->SetFont(font);
             
             int text_extent = 0;
             wxCoord width;
             wxCoord height;
             
-            dc.GetTextExtent("Legend:",
+            dc->GetTextExtent("Legend:",
                              &width, &height, 0, 0, &font);
                 
             if(width > text_extent)
@@ -839,7 +867,7 @@ void wxTrendPlot::DrawPlot(double start_x)
                 
             for(size_t index = 0; index < m_data_sets.size(); index++)
             {
-                dc.GetTextExtent(m_data_sets[index].m_label.c_str(),
+                dc->GetTextExtent(m_data_sets[index].m_label.c_str(),
                                  &width, &height, 0, 0, &font);
                 
                 if(width > text_extent)
@@ -852,10 +880,10 @@ void wxTrendPlot::DrawPlot(double start_x)
         }
         
         pen.SetColour(0x0, 0x0, 0x0);
-        dc.SetPen(pen);
+        dc->SetPen(pen);
         
-        dc.SetBrush( *wxWHITE_BRUSH);
-        dc.DrawRectangle(
+        dc->SetBrush( *wxWHITE_BRUSH);
+        dc->DrawRectangle(
             rect.x + left_pad,
             rect.y + top_pad,
             rect.width - left_pad - right_pad,
@@ -865,8 +893,8 @@ void wxTrendPlot::DrawPlot(double start_x)
         for(int count = 1; count < number_x_data_points; count++)
         {
             pen.SetColour(0xE0, 0xE0, 0xE0);
-            dc.SetPen(pen);
-            dc.DrawLine(rect.x + left_pad + count * ((rect.width - left_pad - right_pad)/(1.0*number_x_data_points)), 
+            dc->SetPen(pen);
+            dc->DrawLine(rect.x + left_pad + count * ((rect.width - left_pad - right_pad)/(1.0*number_x_data_points)), 
                         rect.y + top_pad + 1,
                         rect.x + left_pad + count * ((rect.width - left_pad - right_pad)/(1.0*number_x_data_points)),
                         rect.y + top_pad - 1 + rect.height - top_pad - bottom_pad - 1);
@@ -874,8 +902,8 @@ void wxTrendPlot::DrawPlot(double start_x)
         for(int count = 1; count <= number_y_data_points; count++)
         {
             pen.SetColour(0xE0, 0xE0, 0xE0);
-            dc.SetPen(pen);
-            dc.DrawLine(rect.x + left_pad + 1, 
+            dc->SetPen(pen);
+            dc->DrawLine(rect.x + left_pad + 1, 
                         rect.y + top_pad + (1.0 * count * ((rect.height - top_pad - bottom_pad)/(1.0*number_y_data_points))),
                         rect.x + rect.width - right_pad - 2, 
                         rect.y + top_pad + (1.0 * count * ((rect.height - top_pad - bottom_pad)/(1.0*number_y_data_points))));
@@ -883,7 +911,7 @@ void wxTrendPlot::DrawPlot(double start_x)
         
         
         pen.SetColour(0x0, 0x0, 0xFF);
-        dc.SetPen(pen);
+        dc->SetPen(pen);
         
         int min_x = rect.x + left_pad;
         int max_x = rect.x - right_pad + rect.width;
@@ -900,7 +928,7 @@ void wxTrendPlot::DrawPlot(double start_x)
             pen.SetColour(m_data_sets[index].m_color.Red(),
                           m_data_sets[index].m_color.Green(),
                           m_data_sets[index].m_color.Blue());
-            dc.SetPen(pen);
+            dc->SetPen(pen);
             if(m_data_sets[index].m_points.size() != 0)
             {
                 int prev_x = min_x + (m_data_sets[index].m_points.begin()->first - start_x)/x_increment;
@@ -914,7 +942,7 @@ void wxTrendPlot::DrawPlot(double start_x)
                     
                     int x = min_x + ((iter->first - start_x) / x_increment);
                     int y = min_y - (iter->second / y_increment);
-                    dc.DrawLine(prev_x,
+                    dc->DrawLine(prev_x,
                                 prev_y,
                                 x,
                                 y);
@@ -926,32 +954,32 @@ void wxTrendPlot::DrawPlot(double start_x)
         
         
         pen.SetColour(0xFF, 0xFF, 0xFF);
-        dc.SetPen(pen);
-        dc.SetBrush( *wxWHITE_BRUSH);
+        dc->SetPen(pen);
+        dc->SetBrush( *wxWHITE_BRUSH);
         
         // Over-write the right hand side of the graph
-        dc.DrawRectangle(
+        dc->DrawRectangle(
             rect.x + rect.width - right_pad,
             rect.y,
             rect.x + rect.width,
             rect.y + rect.height);
         
         // Over-write the left hand side of the graph
-        dc.DrawRectangle(
+        dc->DrawRectangle(
             rect.x,
             rect.y,
             rect.x + left_pad,
             rect.y + rect.height);
         
         // Over-write the top part of the graph
-        dc.DrawRectangle(
+        dc->DrawRectangle(
             rect.x,
             rect.y,
             rect.x + rect.width,
             rect.y + top_pad);
         
         // Over-write the bottom part of the graph
-        dc.DrawRectangle(
+        dc->DrawRectangle(
             rect.x,
             rect.y + rect.height - bottom_pad,
             rect.x + rect.width,
@@ -961,20 +989,20 @@ void wxTrendPlot::DrawPlot(double start_x)
         
         font.SetFamily(wxFONTFAMILY_ROMAN);
         font.SetPointSize(8);
-        dc.SetFont(font);
+        dc->SetFont(font);
         
         
         // Now draw the labels
         for(int count = 0; count <= number_x_data_points; count++)
         {
             double x = (x_range/number_x_data_points) * count; 
-            dc.DrawText(wxString::Format("%2.2f", start_x + x),
+            dc->DrawText(wxString::Format("%2.2f", start_x + x),
                         rect.x + left_pad - 8 + count * ((rect.width - left_pad - right_pad)/(1.0*number_x_data_points)),
                         rect.y + rect.height - (bottom_pad/2) - 10);
         
             pen.SetColour(0xA0, 0xA0, 0xA0);
-            dc.SetPen( pen );
-            dc.DrawLine(rect.x + left_pad + count * ((rect.width - left_pad - right_pad)/(1.0*number_x_data_points)), 
+            dc->SetPen( pen );
+            dc->DrawLine(rect.x + left_pad + count * ((rect.width - left_pad - right_pad)/(1.0*number_x_data_points)), 
                         rect.y + top_pad - 1 + rect.height - top_pad - bottom_pad,
                         rect.x + left_pad + count * ((rect.width - left_pad - right_pad)/(1.0*number_x_data_points)),
                         rect.y + top_pad + 5 + rect.height - top_pad - bottom_pad);
@@ -983,14 +1011,14 @@ void wxTrendPlot::DrawPlot(double start_x)
         for(int count = 0; count < number_y_data_points; count++)
         {
             pen.SetColour(0xA0, 0xA0, 0xA0);
-            dc.SetPen(pen);
-            dc.DrawLine(rect.x + left_pad - 4, 
+            dc->SetPen(pen);
+            dc->DrawLine(rect.x + left_pad - 4, 
                         rect.y + top_pad + count * ((rect.height - top_pad - bottom_pad)/(1.0*number_y_data_points)),
                         rect.x + left_pad, 
                         rect.y + top_pad + count * ((rect.height - top_pad - bottom_pad)/(1.0*number_y_data_points)));
         
             double y = y_range - ((y_range/number_y_data_points) * count);
-            dc.DrawText(wxString::Format("%2.2f", y),
+            dc->DrawText(wxString::Format("%2.2f", y),
                         rect.x + left_pad - 30,
                         rect.y + top_pad - 8 + count * ((rect.height - top_pad - bottom_pad)/(1.0*number_y_data_points)));
         }
@@ -998,40 +1026,39 @@ void wxTrendPlot::DrawPlot(double start_x)
         font.SetFamily(wxFONTFAMILY_ROMAN);
         font.SetPointSize(10);
         font.SetWeight(wxBOLD);
-        dc.SetFont(font);
+        dc->SetFont(font);
         
         if(m_show_title)
         {
-            dc.DrawText(m_title.c_str(), rect.width/2, rect.y + 10);
+            dc->DrawText(m_title.c_str(), rect.width/2, rect.y + 10);
         }
         
         font.SetFamily(wxFONTFAMILY_ROMAN);
         font.SetPointSize(8);
-        dc.SetFont(font);
+        dc->SetFont(font);
         
         if(m_show_x_axis_title)
         {
-            dc.DrawText(m_x_axis_title.c_str(), rect.width/2, rect.y + rect.height - 16);
+            dc->DrawText(m_x_axis_title.c_str(), rect.width/2, rect.y + rect.height - 16);
         }
         
         if(m_show_y_axis_title)
         {
-            dc.DrawRotatedText(m_y_axis_title.c_str(), rect.x + 2, rect.y + rect.height/2, 90);
+            dc->DrawRotatedText(m_y_axis_title.c_str(), rect.x + 2, rect.y + rect.height/2, 90);
         }
         
-        dc.SetTextForeground(wxColour(0xA0, 0xA0, 0xA0));
+        dc->SetTextForeground(wxColour(0xA0, 0xA0, 0xA0));
         
         if(m_is_paused)
         {
             pen.SetColour(0xA0, 0xA0, 0xA0);
-            dc.SetPen(pen);
-            dc.DrawText("Paused", rect.width - 80, rect.y + 5);
+            dc->SetPen(pen);
+            dc->DrawText("Paused", rect.width - 80, rect.y + 5);
         }
         
         if(m_zoom_factor != 1.0)
         {
-            
-            dc.DrawText(wxString::Format("Zoom: %.1f%%", m_zoom_factor * 100), rect.width - 80, rect.y + 15);
+            dc->DrawText(wxString::Format("Zoom: %.1f%%", m_zoom_factor * 100), rect.width - 80, rect.y + 15);
         }
         
         
@@ -1041,12 +1068,12 @@ void wxTrendPlot::DrawPlot(double start_x)
             int x = rect.x + rect.width - right_pad + 10;
             int y = 50;
             
-            dc.SetBrush(wxColour(0xE0, 0xE0, 0xE0));
-            dc.DrawRectangle(rect.x + rect.width - right_pad + 5, y, right_pad - 8, 18);
-            dc.SetTextForeground(wxColour(0x0, 0x0, 0x0));
-            dc.DrawText("Legend:", x, y);
+            dc->SetBrush(wxColour(0xE0, 0xE0, 0xE0));
+            dc->DrawRectangle(rect.x + rect.width - right_pad + 5, y, right_pad - 8, 18);
+            dc->SetTextForeground(wxColour(0x0, 0x0, 0x0));
+            dc->DrawText("Legend:", x, y);
             
-            dc.SetTextForeground(wxColour(0xA0, 0xA0, 0xA0));
+            dc->SetTextForeground(wxColour(0xA0, 0xA0, 0xA0));
             int save_y = y;
             int height = 0;
             y += 17;
@@ -1055,8 +1082,8 @@ void wxTrendPlot::DrawPlot(double start_x)
                 y += 18;
                 height += 18;
             }
-            dc.SetBrush(wxColour(0xF0, 0xF0, 0xF0));
-            dc.DrawRectangle(rect.x + rect.width - right_pad + 5, y-height,
+            dc->SetBrush(wxColour(0xF0, 0xF0, 0xF0));
+            dc->DrawRectangle(rect.x + rect.width - right_pad + 5, y-height,
                              right_pad - 8, height + 2);
                              
             y = save_y;
@@ -1064,31 +1091,16 @@ void wxTrendPlot::DrawPlot(double start_x)
             
             for(size_t index = 0; index < m_data_sets.size(); index++)
             {
-                dc.SetBrush(m_data_sets[index].m_color);
+                dc->SetBrush(m_data_sets[index].m_color);
                 
-                dc.DrawRectangle(x, y, 15, 15);
-                dc.DrawText(m_data_sets[index].m_label.c_str(), x + 18, y);
+                dc->DrawRectangle(x, y, 15, 15);
+                dc->DrawText(m_data_sets[index].m_label.c_str(), x + 18, y);
                 y += 18;
                 height += 18;
             }
         }
     } // end of if(m_antialiasing)
 
-}
-
-
-void wxTrendPlot::Antialias(bool antialias)
-{
-    m_antialiasing = antialias;
-    
-    if(m_antialiasing)
-    {
-        m_popup_menu->Check(m_menu_antialias, true);
-    }
-    else
-    {
-        m_popup_menu->Check(m_menu_antialias, false);
-    }
 }
 
 
@@ -1192,75 +1204,158 @@ void wxTrendPlot::OnSize(wxSizeEvent& event)
 void wxTrendPlot::OnPaint(wxPaintEvent &WXUNUSED(event))
 {
     wxPaintDC dc(this);
-    PrepareDC(dc);
-
+    
     wxRect rect = GetClientRect();
-
+    
     if(rect.width == 0 || rect.height == 0)
     {
         return;
     }
-
-
+    
+    switch(m_renderer)
+    {
+        // In this case we could try allocating any memory objects
+        // outside of this code such as in the resize event to
+        // remove any performance problems caused by allocating
+        // memory.
+        case RENDER_CAIRO_NATIVE:
+        {
 #ifdef __WXMSW__
-    SetStatusText(_T("Rendering with WIN32"));
-    HWND hwnd = (HWND)this->GetHandle();
-    HDC hdc = ::GetDC(hwnd);
-    
-    // Create a double buffer for blitting to
-    // the screen to prevent screen flicker. Pass
-    // the double buffer to cairo and blit it
-    // in the paint routine.
-    HDC dcbuffer = CreateCompatibleDC(hdc);
-    HBITMAP hbuffer = CreateCompatibleBitmap(hdc, rect.width, rect.height);
-    SelectObject(dcbuffer, hbuffer); 
-    
-    cairo_surface_t* cairo_surface = cairo_win32_surface_create(dcbuffer);
-    m_cairo_image = cairo_create(cairo_surface);
-    DrawPlot();
-    BitBlt(hdc, 0, 0, rect.width, rect.height, dcbuffer, 0, 0, SRCCOPY);
-    
-    // Tear down the cairo object now that we don't need
-    // it anymore.
-    cairo_destroy((cairo_t*)m_cairo_image);
-    cairo_surface_destroy(cairo_surface);
-    
-    DeleteDC(dcbuffer);
-    DeleteObject(hbuffer);
+            //SetStatusText("Rending with WIN32");
+            HWND hwnd = (HWND)this->GetHandle();
+            HDC hdc = ::GetDC(hwnd);
+            
+            // Create a double buffer for blitting to
+            // the screen to prevent screen flicker. Pass
+            // the double buffer to cairo and blit it
+            // in the paint routine.
+            HDC dcbuffer = CreateCompatibleDC(hdc);
+            HBITMAP hbuffer = CreateCompatibleBitmap(hdc, rect.width, rect.height);
+            SelectObject(dcbuffer, hbuffer); 
+            
+            cairo_surface_t* cairo_surface = cairo_win32_surface_create(dcbuffer);
+            cairo_t* cairo_image = cairo_create(cairo_surface);
+            Draw(true, cairo_image);
+            BitBlt(hdc, 0, 0, rect.width, rect.height, dcbuffer, 0, 0, SRCCOPY);
+            
+            // Tear down the cairo object now that we don't need
+            // it anymore.
+            cairo_destroy(cairo_image);
+            cairo_surface_destroy(cairo_surface);
+            
+            DeleteDC(dcbuffer);
+            DeleteObject(hbuffer);
 
-    // Because we called ::GetDC make sure we relase the handle
-    // back to the system or we'll have a memory leak.
-    ::ReleaseDC(hwnd,hdc);
+            // Because we called ::GetDC make sure we relase the handle
+            // back to the system or we'll have a memory leak.
+            ::ReleaseDC(hwnd,hdc);
             
 #elif defined(__WXMAC__)
-    SetStatusText("Rending directly to a Quartz surface using Cairo");
-    
-    CGContextRef context = (CGContextRef) dc.GetGraphicsContext()->GetNativeContext();
-    
-    if(context == 0)
-    {
-        return;
-    }
-    
-    cairo_surface_t* cairo_surface = cairo_quartz_surface_create_for_cg_context(context, rect.width, rect.height);
-    m_cairo_image = cairo_create(cairo_surface);
-    
-    DrawPlot();
-    cairo_surface_flush(cairo_surface);
-    
-    CGContextFlush( context );
-    cairo_surface_destroy(cairo_surface);
-    cairo_destroy((cairo_t*)m_cairo_image);
+            SetStatusText("Rending directly to a Quartz surface using Cairo");
+            
+            CGContextRef context = (CGContextRef) dc.GetGraphicsContext()->GetNativeContext();
+            
+            if(context == 0)
+            {
+                return;
+            }
+            
+            cairo_surface_t* cairo_surface = cairo_quartz_surface_create_for_cg_context(context, rect.width, rect.height);
+            cairo_t* cairo_image = cairo_create(cairo_surface);
+            
+            Draw(true, cairo_image);
+            cairo_surface_flush(cairo_surface);
+            
+            CGContextFlush( context );
+            cairo_surface_destroy(cairo_surface);
+            cairo_destroy(cairo_image);
             
 #elif defined(__WXGTK__)
-    SetStatusText("Rendering directly to a Quartz surface using Cairo");
+            SetStatusText("Rendering directly to GDK surface using Cairo");
 
-    // If it's GTK then use the gdk_cairo_create() method. The GdkDrawable object
-    // is stored in m_window of the wxPaintDC.
-    m_cairo_image = gdk_cairo_create(dc.m_window);
-    DrawPlot();
-    cairo_destroy((cairo_t*)m_cairo_image);
+            // If it's GTK then use the gdk_cairo_create() method. The GdkDrawable object
+            // is stored in m_window of the wxPaintDC.
+            cairo_t* cairo_image = gdk_cairo_create(dc.m_window);
+            Draw(true, cairo_image);
+            cairo_destroy(cairo_image);
 #endif
+            
+            break;
+        }
+        // In this case it would make an awful lot of sense to perform
+        // the malloc calls and the creation of the cairo surface in
+        // the onsize method. This would prevent the overhead of all
+        // this allocation on every paint call. We could also move the
+        // wxImage constructor there as well.
+        case RENDER_CAIRO_BUFFER:
+        {
+            //SetStatusText("Rending to a buffer and copying over");
+            
+            unsigned char* image_buffer = (unsigned char*)malloc(rect.width * rect.height * 4);
+            unsigned int image_buffer_len = rect.width * rect.height * 4;
+            
+            cairo_surface_t* cairo_surface = cairo_image_surface_create_for_data(
+                                            image_buffer,
+                                            CAIRO_FORMAT_RGB24,
+                                            rect.width,
+                                            rect.height,
+                                            rect.width * 4);
+            cairo_t* cairo_image = cairo_create(cairo_surface);
+            
+            Draw(true, cairo_image);
+            
+            // Now translate the raw image data from the format stored
+            // by cairo into a format understood by wxImage.
+            unsigned char* output = (unsigned char*)malloc(image_buffer_len);
+            int offset = 0;
+            for(size_t count = 0; count < image_buffer_len; count+=4)
+            {
+                int r = *(image_buffer+count+2);
+                *(output + offset) = r;
+                offset++;
+                int g = *(image_buffer+count+1);
+                *(output + offset) = g;
+                offset++;
+                int b = *(image_buffer+count+0);
+                *(output + offset) = b;
+                offset++;
+            } 
+            
+            
+            wxImage img(rect.width, rect.height, output, true);
+            wxBitmap bmp(img);
+            wxClientDC client_dc(this);
+            
+            // Create a double buffer to draw the plot
+            // on screen to prevent flicker from occuring.
+            wxBufferedDC dc;
+            dc.Init(&client_dc, bmp);
+            
+            cairo_destroy(cairo_image);
+            cairo_surface_destroy(cairo_surface);
+            free(image_buffer);
+            free(output);
+            break;
+        }
+        
+        // In this mode we'll just render using the native canvas
+        // It's good on the Mac but pretty poor on windows and GTK.
+        default:
+        case RENDER_NATIVE:
+        {
+            //SetStatusText("Rending natively without Cairo");
+            
+            wxBitmap bmp;
+            
+            // Create a double buffer to draw the plot
+            // on screen to prevent flicker from occuring.
+            wxBufferedDC buff_dc;
+            buff_dc.Init(&dc, bmp);
+            buff_dc.Clear();
+            
+            Draw(false, &buff_dc);
+        }
+    }
 
 }
 

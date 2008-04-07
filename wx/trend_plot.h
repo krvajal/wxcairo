@@ -77,6 +77,9 @@ class wxTrendPlot: public wxScrolledWindow
 
         ~wxTrendPlot(void);
        
+        // Set the rendering mode for drawing the clock
+        void SetRenderer(int renderer);
+        
         // Handle the paint event 
         void OnPaint(wxPaintEvent &event);
         
@@ -154,10 +157,9 @@ class wxTrendPlot: public wxScrolledWindow
         }
         
         void Pause(bool pause);
-        void Antialias(bool antialias);
     
     private:
-        void DrawPlot(double x = 0);
+        void Draw(bool use_cairo, void*    drawer, double start_x = 0);
         void OnSize(wxSizeEvent& event);
         void OnMouseMove(wxMouseEvent& event);
         void OnMouseDClick(wxMouseEvent& event);
@@ -171,13 +173,20 @@ class wxTrendPlot: public wxScrolledWindow
         bool      m_clip;
         wxMenu*   m_popup_menu;
         wxMenu*   m_delete_menu;
-        int m_menu_antialias;
         int m_menu_zoomin;
         int m_menu_zoomout;
         int m_menu_pause;
         int m_menu_plotconfig;
         int m_menu_delete_submenu;
         
+        int     m_renderer;
+        
+        // Menu options for selecting the rendering mode
+        int m_menu_native_render;
+        int m_menu_cairo_render_buffer;
+        int m_menu_cairo_render_native;
+        
+
         double m_end_point;
         
         int m_mouse_x;
