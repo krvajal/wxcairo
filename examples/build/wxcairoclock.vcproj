@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(WXWIDGETS_LIB_DIR)/mswd&quot;;&quot;$(WXWIDGETS_INC_DIR)&quot;;&quot;$(CAIRO_INC_DIR)&quot;"
+				AdditionalIncludeDirectories="&quot;$(WXWIDGETS_LIB_DIR)/mswd&quot;;../..;&quot;$(WXWIDGETS_INC_DIR)&quot;;&quot;$(CAIRO_INC_DIR)&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

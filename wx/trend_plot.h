@@ -57,7 +57,8 @@
 #include <wx/artprov.h>
 
 #include <vector>
-#include "trend_plot_dataset.h"
+#include "wx/trend_plot_dataset.h"
+#include "wx/wxcairo.h"
 
 
 //+------------------------------------------------------------------------------
