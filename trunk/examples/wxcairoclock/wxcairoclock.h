@@ -66,11 +66,7 @@
 #include <wx/image.h>
 #include <wx/dcbuffer.h>
 
-#define PI 3.14157
-
-#define RENDER_CAIRO_BUFFER 0
-#define RENDER_CAIRO_NATIVE 1
-#define RENDER_NATIVE       2
+#include "wx/wxcairo.h"
 
 
 //+------------------------------------------------------------------------------

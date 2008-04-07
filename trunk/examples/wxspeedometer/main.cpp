@@ -145,7 +145,7 @@ wxMainForm::wxMainForm(const wxString& title,
             wxSizeEventHandler(wxMainForm::OnSize));
     
     m_timer = new wxTimer(this->GetEventHandler());
-    m_timer->Start(300);
+    m_timer->Start(400);
     Connect(m_timer->GetId(),
             wxEVT_TIMER,
             (wxObjectEventFunction) &wxMainForm::OnTimer);
@@ -161,10 +161,19 @@ wxMainForm::~wxMainForm(void)
 
 void wxMainForm::OnTimer(wxTimerEvent& event)
 {
-    int angle = rand() % 360;
+    static int angle = 0;//rand() % 180;
+    angle+=4;
 
-    m_speedometer->SetAngle(angle);
-    m_speedometer->UpdateSpeedometer(); 
+    if(angle > 180)
+    {
+        angle = 0;
+    }
+
+    if(m_speedometer)
+    {
+        m_speedometer->SetAngle(angle);
+        m_speedometer->UpdateSpeedometer();
+    }
 }
 
 //+-------------------------------------------------------------------------------

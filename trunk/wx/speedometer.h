@@ -55,8 +55,7 @@
 #include <wx/colordlg.h>
 #include <wx/artprov.h>
 
-#define PI             3.141592653
-#define RAD_PER_DEGREE 57.2957
+#include "wx/wxcairo.h"
 
 
 //+------------------------------------------------------------------------------
@@ -71,48 +70,11 @@
 class wxSpeedometer: public wxPanel
 {
     public:
-        wxSpeedometer( wxWindow *parent ) : wxPanel(parent, wxID_ANY)
-        {
-            Connect(this->GetId(),
-                    wxEVT_SIZE,
-                    wxSizeEventHandler(wxSpeedometer::OnSize));
-            
-            Connect(wxID_ANY,
-                    wxEVT_PAINT,
-                    wxPaintEventHandler(wxSpeedometer::OnPaint));
-            
-            Connect(this->GetId(),
-                    wxEVT_CONTEXT_MENU,
-                    wxContextMenuEventHandler(wxSpeedometer::OnContextMenu));
-    
-            Connect(wxID_ANY,
-                    wxEVT_COMMAND_MENU_SELECTED,
-                    wxCommandEventHandler(wxSpeedometer::OnDoAction));
-                            
-            // Create the popup menus
-            m_popup_menu = new wxMenu("");
-            wxMenuItem* item = m_popup_menu->AppendCheckItem(wxID_ANY, "Antialias");
-            m_menu_antialias = item->GetId();
-            
-            m_angle = PI;
-
-            m_timer = new wxTimer(this->GetEventHandler());
-            m_timer->Start(300);
-            
-            Connect(m_timer->GetId(),
-                    wxEVT_TIMER,
-                    wxTimerEventHandler(wxSpeedometer::OnTimer));
-
-            srand(1000);
-            
-            m_antialiasing = true;
-            m_popup_menu->Check(m_menu_antialias, true);
-        }
+        wxSpeedometer( wxWindow *parent );
         
         ~wxSpeedometer(void)
         {
             delete m_popup_menu;
-            delete m_timer;
         }
         
         void OnContextMenu(wxContextMenuEvent& event)
@@ -122,20 +84,19 @@ class wxSpeedometer: public wxPanel
         
         
         void OnDoAction(wxCommandEvent& event);
-        
-        void Antialias(bool antialias)
-        {
-            m_antialiasing = antialias;
-            UpdateSpeedometer();
-        }
 
+        // Set the rendering mode for drawing the clock
+        void SetRenderer(int renderer);
 
         void SetAngle(int angle)
         {
             m_angle = PI + (angle / RAD_PER_DEGREE);
         }
 
-        void Draw(void* cairo_context);
+        void Draw(bool     use_cairo,
+                  void*    drawer,
+                  int      width,
+                  int      height);
         
         void UpdateSpeedometer(void)
         {
@@ -148,14 +109,6 @@ class wxSpeedometer: public wxPanel
             {
                 Refresh(false);
             }
-        }
-
-        void OnTimer(wxTimerEvent& event)
-        {
-            static int angle = 0;
-            angle = rand()/(RAND_MAX * 1/180);
-            SetAngle(angle);
-            UpdateSpeedometer();
         }
 
     private:
@@ -173,12 +126,14 @@ class wxSpeedometer: public wxPanel
         }
         
         double m_angle;
-        wxTimer* m_timer;
         
         wxMenu* m_popup_menu;
-        int     m_menu_antialias;
+        int     m_renderer;
         
-        bool m_antialiasing;
+        // Menu options for selecting the rendering mode
+        int m_menu_native_render;
+        int m_menu_cairo_render_buffer;
+        int m_menu_cairo_render_native;
 };
 
 #endif // __WXSPEEDOMETER_H__
