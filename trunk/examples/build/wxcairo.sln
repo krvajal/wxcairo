@@ -1,31 +1,31 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxcairoclock", "wxcairoclock.vcproj", "{24177C96-58C4-4AE0-B403-ACF7DE3588EE}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxspeedometer", "wxspeedometer.vcproj", "{24177C96-58C4-4AE0-B403-ACF7DE3588EE}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxspeedometer", "wxspeedometer.vcproj", "{DB7F1184-16A2-47D8-A4AD-757641C70096}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxtrendplot", "wxtrendplot.vcproj", "{079AF37F-2F12-4F89-BA2B-895E217D0979}"
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ProjectDependencies) = postSolution
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Debug|Win32.Build.0 = Debug|Win32
+		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Release|Win32.ActiveCfg = Release|Win32
+		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Release|Win32.Build.0 = Release|Win32
+		{DB7F1184-16A2-47D8-A4AD-757641C70096}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DB7F1184-16A2-47D8-A4AD-757641C70096}.Debug|Win32.Build.0 = Debug|Win32
+		{DB7F1184-16A2-47D8-A4AD-757641C70096}.Release|Win32.ActiveCfg = Release|Win32
+		{DB7F1184-16A2-47D8-A4AD-757641C70096}.Release|Win32.Build.0 = Release|Win32
+		{079AF37F-2F12-4F89-BA2B-895E217D0979}.Debug|Win32.ActiveCfg = Debug|Win32
+		{079AF37F-2F12-4F89-BA2B-895E217D0979}.Debug|Win32.Build.0 = Debug|Win32
+		{079AF37F-2F12-4F89-BA2B-895E217D0979}.Release|Win32.ActiveCfg = Release|Win32
+		{079AF37F-2F12-4F89-BA2B-895E217D0979}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Debug.ActiveCfg = Debug|Win32
-		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Debug.Build.0 = Debug|Win32
-		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Release.ActiveCfg = Release|Win32
-		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Release.Build.0 = Release|Win32
-		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Debug.ActiveCfg = Debug|Win32
-		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Debug.Build.0 = Debug|Win32
-		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Release.ActiveCfg = Release|Win32
-		{24177C96-58C4-4AE0-B403-ACF7DE3588EE}.Release.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

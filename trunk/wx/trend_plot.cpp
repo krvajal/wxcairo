@@ -65,10 +65,6 @@
 #include <wx/colordlg.h>
 #include <wx/artprov.h>
 
-#if (__WXDEBUG__) && (_DEBUG)
-   #define new DEBUG_NEW
-#endif
-
 #include <cairo.h>
 #include <ctime>
 using namespace std;
@@ -523,7 +519,11 @@ void wxTrendPlot::DrawPlot(double start_x)
                         break;
                     }
                 }
-                iter++;
+
+                if(iter != m_data_sets[index].m_points.end())
+                {
+                    iter++;
+                }
                 
                 for(iter; iter != m_data_sets[index].m_points.end(); iter++)
                 {
@@ -1222,7 +1222,7 @@ void wxTrendPlot::OnPaint(wxPaintEvent &WXUNUSED(event))
     
     // Tear down the cairo object now that we don't need
     // it anymore.
-    cairo_destroy((cairo_t*)cairo_image);
+    cairo_destroy((cairo_t*)m_cairo_image);
     cairo_surface_destroy(cairo_surface);
     
     DeleteDC(dcbuffer);

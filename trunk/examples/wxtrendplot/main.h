@@ -37,7 +37,7 @@
 
 #include <wx/app.h>
 #include <wx/frame.h>
-#include "trend_plot.h"
+#include "wx/trend_plot.h"
 
 
 //+------------------------------------------------------------------------------
