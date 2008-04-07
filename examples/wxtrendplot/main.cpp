@@ -54,7 +54,7 @@
 
 
 #include "main.h"
-#include "trend_plot.h"
+#include "wx/trend_plot.h"
 
 
 // Create a new application object: this macro will allow wxWidgets to create

@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="wxspeedometer"
-	ProjectGUID="{DB7F1184-16A2-47D8-A4AD-757641C70096}"
+	Name="wxtrendplot"
+	ProjectGUID="{079AF37F-2F12-4F89-BA2B-895E217D0979}"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
-			IntermediateDirectory="Debug/wxspeedometer"
+			IntermediateDirectory="Debug/wxtrendplot"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -63,11 +63,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxexpatd.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib oleacc.lib cairo.lib"
-				OutputFile="$(OutDir)/wxspeedometer.exe"
+				OutputFile="$(OutDir)/wxtrendplot.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(CAIRO_LIB_DIR)&quot;;&quot;$(WXWIDGETS_LIB_DIR)&quot;"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/wxspeedometer.pdb"
+				ProgramDatabaseFile="$(OutDir)/wxtrendplot.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -98,7 +98,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
-			IntermediateDirectory="Release/wxspeedometer"
+			IntermediateDirectory="Release/wxtrendplot"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -140,7 +140,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxbase28d.lib wxmsw28d_core.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxexpatd.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib oleacc.lib cairo.lib"
-				OutputFile="$(OutDir)/wxspeedometer.exe"
+				OutputFile="$(OutDir)/wxtrendplot.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(CAIRO_LIB_DIR)&quot;;&quot;$(WXWIDGETS_LIB_DIR)&quot;"
 				GenerateDebugInformation="true"
@@ -180,22 +180,14 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FE}"
 			>
 			<File
-				RelativePath="..\wxspeedometer\main.cpp"
+				RelativePath="..\wxtrendplot\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\wxspeedometer\main.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\wx\speedometer.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\wx\speedometer.h"
+				RelativePath="..\..\wx\trend_plot.cpp"
 				>
 			</File>
 		</Filter>
