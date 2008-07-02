@@ -14,10 +14,6 @@ wxcairo-out :=$(binPrefix)wxcairo.a
 wxcairo-src := $(srcPrefix)wx/speedometer.cpp \
                $(srcPrefix)wx/trend_plot.cpp 
 
-ifeq ($(platform),linux)
-else
-endif
-
 # Build the list of wxcairo object files
 wxcairo-obj := $(call gen_objs,wxcairo)
 
@@ -30,21 +26,21 @@ $(wxcairo-obj):$(call gen_cpp_file,wxcairo,$@)
 	@echo "-----------------------------------------------------"
 	@echo ""
 	@$(make-parent-dir)
-	$(CC) -fPIC -MD \
+	$(CC) -MD \
 				  $(wxcairo-inc) \
 				  $(wxcairo-defines) \
 				  -c -o $@ \
 				  $(call gen_cpp_file,wxcairo,$@)
 	@echo ""
 
-# Linker instructions for the wxcairo library target
+# Build instructions for the wxcairo library target
 $(wxcairo-out): $(wxcairo-obj)
 	@echo ""
 	@echo "wxCairo: Linking $(wxcairo-out), $@"
 	@echo "-------------------------------"
 	@echo ""
 	@$(make-parent-dir)
-#	$(LD) -r $(wxcairo-obj) -o $@ $(wxcairo-linker)
+	ar ruv $(wxcairo-out) $(wxcairo-obj)
 	@echo ""
 
 

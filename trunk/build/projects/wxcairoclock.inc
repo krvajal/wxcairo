@@ -41,7 +41,7 @@ $(wxcairoclock-out): $(wxcairoclock-obj) $(wxcairo-out)
 	@echo "-------------------------------"
 	@echo ""
 	@$(make-parent-dir)
-	g++ $(wxcairoclock-obj) $(wxcairo-obj) -o $@ $(wxcairo-linker)
+	g++ $(wxcairoclock-obj) $(wxcairo-out) -o $@ $(wxcairo-linker)
 	$(call gen_app_file,$@,wxcairoclock)
 	@echo ""
 

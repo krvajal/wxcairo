@@ -40,7 +40,7 @@ $(wxcairotrend-out): $(wxcairotrend-obj) $(wxcairo-out)
 	@echo "-------------------------------"
 	@echo ""
 	@$(make-parent-dir)
-	g++ $(wxcairotrend-obj) $(wxcairo-obj) -o $@ $(wxcairo-linker)
+	g++ $(wxcairotrend-obj) $(wxcairo-out) -o $@ $(wxcairo-linker)
 	$(call gen_app_file,$@,wxcairotrend)
 	@echo ""
 

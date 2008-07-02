@@ -40,7 +40,7 @@ $(wxcairospeedometer-out): $(wxcairospeedometer-obj) $(wxcairo-out)
 	@echo "-------------------------------"
 	@echo ""
 	@$(make-parent-dir)
-	g++ $(wxcairospeedometer-obj) $(wxcairo-obj) -o $@ $(wxcairo-linker)
+	g++ $(wxcairospeedometer-obj) $(wxcairo-out) -o $@ $(wxcairo-linker)
 	$(call gen_app_file,$@,wxcairospeedometer)
 	@echo ""
 
