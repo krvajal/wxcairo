@@ -51,7 +51,7 @@ else
 endif
 
 CC            := g++
-LD            := ld
+LD            := g++
 
 override DEFINES += $(SWITCHES)
 
@@ -70,16 +70,34 @@ else
 endif
 
 
-# WxWidgets paths
-wxwidgets_path          = ../../../3rdparty/wxwidgets
-wxwidgets_include_paths = -I$(wxwidgets_path)/compiles/macos/lib/wx/include/mac-ansi-release-static-2.8 \
-                          -I$(wxwidgets_path)/include \
-                          -I$(wxwidgets_path)/src/mac/carbon/morefilex
-wxwidgets_lib_paths     = -L$(wxwidgets_path)/compiles/macos/lib
-
 # Cairo paths
 cairo_path          = ../../../3rdparty/cairo
 cairo_include_paths = -I$(cairo_path)/src
+
+
+# WxWidgets paths
+wxwidgets_path          = ../../../3rdparty/wxwidgets
+wxwidgets_lib_paths     = -L$(wxwidgets_path)/compiles/$(platform)/lib
+
+
+ifeq ($(platform),linux)
+    wxwidgets_include_paths = -I$(wxwidgets_path)/compiles/linux/lib/wx/include/linux-ansi-release-static-2.8 \
+                              -I$(wxwidgets_path)/include \
+                              -I$(wxwidgets_path)/compiles/linux/lib/wx/include/gtk2-ansi-release-static-2.8
+    wxwidgets-defines = -D__WXGTK__ -DWX_PRECOMP -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES \
+            -I/opt/gnome/include/gtk-2.0 \
+            -I/opt/gnome/lib/gtk-2.0/include -I/opt/gnome/include/atk-1.0 \
+            -I/opt/gnome/include/pango-1.0 -I/opt/gnome/include/glib-2.0 -I/opt/gnome/lib/glib-2.0/include \
+            -Wall -Wundef -Wno-ctor-dtor-privacy -O2 -fno-strict-aliasing -fno-common
+            
+else
+    wxwidgets_include_paths = -I$(wxwidgets_path)/compiles/macos/lib/wx/include/mac-ansi-release-static-2.8 \
+                              -I$(wxwidgets_path)/include \
+                              -I$(wxwidgets_path)/src/mac/carbon/morefilex
+    wxwidgets-defines = -D__WXMAC__ -DWX_PRECOMP -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -I/Developer/Headers/FlatCarbon
+endif
+
+
 
 # Xframe library include paths
 wxcairo-inc := -I $(srcPrefix) \
@@ -87,17 +105,21 @@ wxcairo-inc := -I $(srcPrefix) \
                $(cairo_include_paths)
 
 ifeq ($(RELEASE),yes)
-    wxcairo-defines := $(DEFINES) -DWXCAIRO -g -W -Werror -I/Developer/Headers/FlatCarbon -Wall -Wundef -Wno-ctor-dtor-privacy -fno-strict-aliasing -fno-common
+    wxcairo-defines := $(wxwidgets-defines) -DWXCAIRO -g -W -Werror -I/Developer/Headers/FlatCarbon -Wall -Wundef -Wno-ctor-dtor-privacy -fno-strict-aliasing -fno-common
 else
-    wxcairo-defines := $(DEFINES) -DDEBUG -DWXCAIRO -g -W -Werror -D__WXMAC__ -DWX_PRECOMP -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -I/Developer/Headers/FlatCarbon -Wall -Wundef -Wno-ctor-dtor-privacy -fno-strict-aliasing -fno-common
+    wxcairo-defines := $(wxwidgets-defines) -DWXCAIRO -DDEBUG -DWXCAIRO -g -W -Wall -Wundef -Wno-ctor-dtor-privacy -fno-strict-aliasing -fno-common
 endif
 
-wxcairo-linker := $(wxwidgets_lib_paths) \
-            -lz -lpthread -liconv -lwx_mac-2.8 -lwxtiff-2.8 -lwxjpeg-2.8 -lwxpng-2.8 -lwxexpat-2.8 \
-            -framework QuickTime -framework IOKit -framework Carbon -framework Cocoa -framework System \
-            -lz -lpthread -liconv -framework WebKit \
-            $(cairo_path)/src/.libs/libcairo.a
-
+ifeq ($(platform),linux)
+    wxcairo-linker := $(wxwidgets_lib_paths) \
+            	-L/usr/local/lib -pthread -lwx_gtk2-2.8 -lpthread -L/opt/gnome/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lfreetype -lz -lfontconfig -lexpat -lglitz -lm -lpng12 -lXrender -lX11 -lpthread -lXau -lXdmcp -lgthread-2.0 -lglib-2.0 -lXinerama -lSM -lpng -lz -lwxtiff-2.8 -lwxjpeg-2.8 -lz -ldl -lm
+else
+    wxcairo-linker := $(wxwidgets_lib_paths) \
+                -lz -lpthread -liconv -lwx_mac-2.8 -lwxtiff-2.8 -lwxjpeg-2.8 -lwxpng-2.8 -lwxexpat-2.8 \
+                -framework QuickTime -framework IOKit -framework Carbon -framework Cocoa -framework System \
+                -lz -lpthread -liconv -framework WebKit \
+                $(cairo_path)/src/.libs/libcairo.a
+endif
 
 # The list of object files used to generate the dependencies of individual
 # source files.
@@ -140,7 +162,10 @@ gen_cpp_file = $(subst $(objPrefix)$(1)/,$(srcPrefix),$(addsuffix .cpp, $(basena
 link_display = @echo "";echo "$1: Linking $(2)";echo "-------------------------------";echo "";mkdir -p "$(@D)"
 
 
-gen_app_file = /Developer/Tools/Rez -d __DARWIN__ -t APPL -d __WXMAC__ -i $(wxwidgets_path)/include -o $(1) Carbon.r ../examples/wxcairoclock/main.r; \
+ifeq ($(platform),linux)
+    gen_app_file =
+else
+    gen_app_file = /Developer/Tools/Rez -d __DARWIN__ -t APPL -d __WXMAC__ -i $(wxwidgets_path)/include -o $(1) Carbon.r ../examples/wxcairoclock/main.r; \
 	/Developer/Tools/SetFile -a C $(1); \
 	mkdir -p $(1).app/Contents; \
 	mkdir -p $(1).app/Contents/MacOS; \
@@ -152,4 +177,4 @@ gen_app_file = /Developer/Tools/Rez -d __DARWIN__ -t APPL -d __WXMAC__ -i $(wxwi
 	echo -n "APPL????" >$(1).app/Contents/PkgInfo; \
 	ln -f $(1) $(1).app/Contents/MacOS/$(2); \
 	cp -f $(wxwidgets_path)/src/mac/carbon/wxmac.icns $(1).app/Contents/Resources/wxmac.icns
-   
+endif   
