@@ -44,7 +44,7 @@ $(wxcairo-out): $(wxcairo-obj)
 	@echo "-------------------------------"
 	@echo ""
 	@$(make-parent-dir)
-	$(LD) -r $(wxcairo-obj) -o $@ $(wxcairo-linker)
+#	$(LD) -r $(wxcairo-obj) -o $@ $(wxcairo-linker)
 	@echo ""
 
 

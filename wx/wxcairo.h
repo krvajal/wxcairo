@@ -9,4 +9,5 @@
 #define RENDER_NATIVE       2
 
 
-#endif __WXCAIRO_H__
+#endif // __WXCAIRO_H__
+
