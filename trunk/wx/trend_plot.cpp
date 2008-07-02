@@ -258,7 +258,7 @@ bool wxTrendPlot::AddPoint(size_t set_handle, double x, double y)
 }
 
         
-void wxTrendPlot::OnContextMenu(wxContextMenuEvent& event)
+void wxTrendPlot::OnContextMenu(wxContextMenuEvent& WXUNUSED(event))
 {
     PopupMenu(m_popup_menu);
 }
@@ -426,8 +426,6 @@ void wxTrendPlot::Draw(bool     use_cairo,
         int right_pad  = 20;
         int number_x_data_points = 20;
         int number_y_data_points = 20;
-        double x_min = 0;
-        double y_min = 0;
         double x_range = m_x_axis_width;
         double y_range = 5.0;
         
@@ -544,7 +542,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
         
                 // Find the first point that is less than the start point. That
                 // will become our prev_x and prev_y
-                for(iter; iter != m_data_sets[index].m_points.end(); iter++)
+                for(; iter != m_data_sets[index].m_points.end(); iter++)
                 {
                     if(iter->first <= start_x)
                     {
@@ -562,7 +560,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
                     iter++;
                 }
                 
-                for(iter; iter != m_data_sets[index].m_points.end(); iter++)
+                for(; iter != m_data_sets[index].m_points.end(); iter++)
                 {
                     // If the point is out of bounds then don't plot it
                     if(iter->first > start_x + m_x_axis_width)
@@ -825,8 +823,6 @@ void wxTrendPlot::Draw(bool     use_cairo,
         int right_pad  = 20;
         int number_x_data_points = 20;
         int number_y_data_points = 20;
-        double x_min = 0;
-        double y_min = 0;
         double x_range = m_x_axis_width;
         double y_range = 5.0;
         wxPen pen;
@@ -937,7 +933,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
                 iter = m_data_sets[index].m_points.begin();
                 iter++;
                 
-                for(iter; iter != m_data_sets[index].m_points.end(); iter++)
+                for(; iter != m_data_sets[index].m_points.end(); iter++)
                 {
                     
                     int x = min_x + ((iter->first - start_x) / x_increment);

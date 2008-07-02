@@ -200,7 +200,7 @@ void wxSpeedometer::OnPaint(wxPaintEvent &WXUNUSED(event))
             ::ReleaseDC(hwnd,hdc);
             
 #elif defined(__WXMAC__)
-            SetStatusText("Rending directly to a Quartz surface using Cairo");
+            //SetStatusText("Rending directly to a Quartz surface using Cairo");
             
             CGContextRef context = (CGContextRef) dc.GetGraphicsContext()->GetNativeContext();
             
@@ -212,7 +212,7 @@ void wxSpeedometer::OnPaint(wxPaintEvent &WXUNUSED(event))
             cairo_surface_t* cairo_surface = cairo_quartz_surface_create_for_cg_context(context, rect.width, rect.height);
             cairo_t* cairo_image = cairo_create(cairo_surface);
             
-            DrawClock(true, cairo_image, rect.width, rect.height);
+            Draw(true, cairo_image, rect.width, rect.height);
             cairo_surface_flush(cairo_surface);
             
             CGContextFlush( context );
@@ -220,12 +220,12 @@ void wxSpeedometer::OnPaint(wxPaintEvent &WXUNUSED(event))
             cairo_destroy(cairo_image);
             
 #elif defined(__WXGTK__)
-            SetStatusText("Rendering directly to GDK surface using Cairo");
+            //SetStatusText("Rendering directly to GDK surface using Cairo");
 
             // If it's GTK then use the gdk_cairo_create() method. The GdkDrawable object
             // is stored in m_window of the wxPaintDC.
             cairo_t* cairo_image = gdk_cairo_create(dc.m_window);
-            DrawClock(true, cairo_image, rect.width, rect.height);
+            Draw(true, cairo_image, rect.width, rect.height);
             cairo_destroy(cairo_image);
 #endif
             
@@ -610,7 +610,6 @@ void wxSpeedometer::Draw(bool     use_cairo,
         
         for(double index = 1.0; index < 2.05; index+=increment)
         {
-            int text_extent = 0;
             wxCoord width;
             wxCoord height;
             

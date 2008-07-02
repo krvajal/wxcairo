@@ -77,7 +77,7 @@ class wxSpeedometer: public wxPanel
             delete m_popup_menu;
         }
         
-        void OnContextMenu(wxContextMenuEvent& event)
+        void OnContextMenu(wxContextMenuEvent& WXUNUSED(event))
         {
             PopupMenu(m_popup_menu);
         }

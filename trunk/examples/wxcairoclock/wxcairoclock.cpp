@@ -259,7 +259,7 @@ void wxCairoClock::GrabCurrentTime(void)
 //|    None.
 //|
 //+------------------------------------------------------------------------------
-void wxCairoClock::OnContextMenu(wxContextMenuEvent& event)
+void wxCairoClock::OnContextMenu(wxContextMenuEvent& WXUNUSED(event))
 {
     PopupMenu(m_popup_menu);
 }
@@ -314,7 +314,7 @@ void wxCairoClock::OnDoAction(wxCommandEvent& event)
 //|    None.
 //|
 //+------------------------------------------------------------------------------
-void wxCairoClock::OnTimer(wxTimerEvent& event)
+void wxCairoClock::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
     GrabCurrentTime();
     Refresh(false);
