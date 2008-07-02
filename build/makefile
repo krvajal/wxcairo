@@ -14,11 +14,12 @@ include macros.inc
 include projects/wxcairo.inc
 include projects/wxcairoclock.inc
 include projects/wxcairospeedometer.inc
+include projects/wxcairotrend.inc
 
 # Add the targets that you want to build. This will
 # restrict the $(MAKE)file to build only the targets that
 # you specify
-targets := wxcairo wxcairoclock wxcairospeedometer
+targets := wxcairo wxcairoclock wxcairospeedometer wxcairotrend
 
 all: $(targets)
 	@echo ""
