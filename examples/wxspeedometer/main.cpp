@@ -159,9 +159,9 @@ wxMainForm::~wxMainForm(void)
     delete m_timer;
 }
 
-void wxMainForm::OnTimer(wxTimerEvent& event)
+void wxMainForm::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-    static int angle = 0;//rand() % 180;
+    static int angle = 0;
     angle+=4;
 
     if(angle > 180)

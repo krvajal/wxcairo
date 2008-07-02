@@ -15,6 +15,7 @@ macos:
             -D__WXMAC__ -DWX_PRECOMP -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES \
             $(wxwidgets_include_paths) \
             $(cairo_include_paths) \
+            -I ../.. \
             -I/Developer/Headers/FlatCarbon -Wall -Wundef -Wno-ctor-dtor-privacy -O2 -fno-strict-aliasing -fno-common \
             ./main.cpp wxcairoclock.cpp \
             -framework QuickTime -framework IOKit -framework Carbon \
