@@ -1,13 +1,9 @@
-#summary One-sentence summary of this page.
+#summary Mixing Cairo with wxWidgets
 
 = Introduction =
 
-Add your content here.
+This project is intended to demonstrate how you can mix the Cairo graphics library with wxWidgets.
 
 
 = Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+By taking advantage of Cairo instead of using the native DC objects you can create portable external classes built around Cairo that can be used in other projects while at the same time taking advantage of the anti-aliasing available in Cairo.
