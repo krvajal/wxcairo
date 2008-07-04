@@ -49,12 +49,12 @@
 // the application icon (under Windows and OS/2 it is in resources and even
 // though we could still include the XPM here it would be unused)
 #if !defined(__WXMSW__) && !defined(__WXPM__)
-    #include "./main.xpm"
+    #include "graphics/main.xpm"
 #endif
 
 
 #include "main.h"
-#include "wxcairoclock.h"
+#include "wx/wxcairoclock.h"
 
 
 // Create a new application object: this macro will allow wxWidgets to create

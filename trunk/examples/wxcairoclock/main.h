@@ -37,7 +37,7 @@
 
 #include <wx/app.h>
 #include <wx/frame.h>
-#include "wxcairoclock.h"
+#include "wx/wxcairoclock.h"
 
 
 //+------------------------------------------------------------------------------

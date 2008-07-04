@@ -142,12 +142,7 @@ class wxTrendPlot: public wxScrolledWindow
         
         void Zoom(double zoom)
         {
-            printf("Zoom: %f\n", zoom);
-
             m_zoom_factor *= (zoom);
-            
-            printf("Zoom factor: %f\n", m_zoom_factor);
-            
             m_x_axis_width *= (1/zoom);
         }
         

@@ -101,6 +101,7 @@ endif
 
 # Xframe library include paths
 wxcairo-inc := -I $(srcPrefix) \
+               -I . \
                $(wxwidgets_include_paths) \
                $(cairo_include_paths)
 
