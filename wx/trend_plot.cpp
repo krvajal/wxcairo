@@ -93,7 +93,8 @@ wxTrendPlot::wxTrendPlot(wxWindow* parent,
     m_std_icon = wxArtProvider::GetIcon(wxART_INFORMATION);
     m_clip = false;
     SetBackgroundColour(*wxWHITE);
-    
+   
+    // Connect the event handlers for the widget 
     Connect(this->GetId(),
             wxEVT_SIZE,
             wxSizeEventHandler(wxTrendPlot::OnSize));
@@ -122,7 +123,7 @@ wxTrendPlot::wxTrendPlot(wxWindow* parent,
             wxEVT_LEFT_DCLICK,
             wxMouseEventHandler(wxTrendPlot::OnMouseDClick));
 
-    // Create the popup menus
+    // Create the popup menus and populate them
     m_popup_menu = new wxMenu("");
     wxMenuItem* item = m_popup_menu->AppendRadioItem(wxID_ANY, "Native");
     m_menu_native_render = item->GetId();
@@ -146,8 +147,8 @@ wxTrendPlot::wxTrendPlot(wxWindow* parent,
     m_delete_menu = new wxMenu("");
     item = m_popup_menu->Append(wxID_ANY, "Delete", m_delete_menu);
     m_menu_delete_submenu = item->GetId();
-    
-    
+   
+    // Setup the internal plot control variables 
     m_mouse_x = 0;
     m_start_plot_x = 0;
     
@@ -1106,13 +1107,13 @@ void wxTrendPlot::Draw(bool     use_cairo,
 //|    OnKeyDown()
 //|
 //| PARAMETERS:
-//|    
+//|    event (I) - The keyboard event that occurred. 
 //|
 //| DESCRIPTION:
-//|    
+//|    This method is called to handle the keyboad event that occurred.
 //|
 //| RETURNS:
-//|
+//|    None.
 //|
 //+------------------------------------------------------------------------------
 void wxTrendPlot::OnKeyDown(wxKeyEvent& event)
@@ -1149,23 +1150,21 @@ void wxTrendPlot::OnKeyDown(wxKeyEvent& event)
 }
 
 
-/*
-+------------------------------------------------------------------------------
-|
-| NAME:
-|    OnSize()
-|
-| PARAMETERS:
-|    
-|
-| DESCRIPTION:
-|    
-|
-| RETURNS:
-|
-|
-+------------------------------------------------------------------------------
-*/
+//+------------------------------------------------------------------------------
+//|
+//| NAME:
+//|    OnSize()
+//|
+//| PARAMETERS:
+//|    
+//|
+//| DESCRIPTION:
+//|    
+//|
+//| RETURNS:
+//|
+//|
+//+------------------------------------------------------------------------------
 void wxTrendPlot::OnSize(wxSizeEvent& event)
 {
     wxRect rect = GetClientRect();

@@ -13,7 +13,7 @@
 wxcairoclock-out :=$(binPrefix)wxcairoclock
 
 wxcairoclock-src := $(srcPrefix)examples/wxcairoclock/main.cpp \
-                    $(srcPrefix)examples/wxcairoclock/wxcairoclock.cpp
+                    $(srcPrefix)wx/wxcairoclock.cpp
 
 wxcairoclock-inc := $(wxcairo-inc) \
              -I $(srcPrefix)/examples/wxcairowxcairoclock
