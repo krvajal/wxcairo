@@ -1,8 +1,26 @@
 #summary Integrating with Cairo
 
-= Windows =
+== Rendering without Cairo ==
+Normally when you write your OnPaint() handler we just use the native canvas to draw to screen. This is fast but doesn't always produce good results due to aliasing:
 
-= Platform Independent Rendering to a Buffer =
+The following examples shows one way you might render using the native wxWidgets canvas using a double buffered DC to prevent flicker:
+{{{
+wxBitmap bmp;
+
+// Create a double buffer to draw the plot
+// on screen to prevent flicker from occuring.
+wxBufferedDC buff_dc;
+buff_dc.Init(&dc, bmp);
+buff_dc.Clear();
+
+Render(false, &buff_dc, rect.width, rect.height);
+}}}
+
+
+== Rendering on Windows ==
+
+
+== Platform Independent Rendering to a Buffer ==
 On platforms such as X11 where the it's currently unknown how to directly use Cairo to render to a DC it is possible to render to an image and then blit that image to screen using a wxBufferedDC.
 
 There are probably more efficient ways of doing this. If there are please make a suggestion. 
