@@ -193,11 +193,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxcairoclock\wxcairoclock.cpp"
+				RelativePath="..\..\wx\wxcairoclock.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\examples\wxcairoclock\wxcairoclock.h"
+				RelativePath="..\..\wx\wxcairoclock.h"
 				>
 			</File>
 		</Filter>
