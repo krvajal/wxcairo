@@ -165,7 +165,7 @@ link_display = @echo "";echo "$1: Linking $(2)";echo "--------------------------
 ifeq ($(platform),linux)
     gen_app_file =
 else
-    gen_app_file = /Developer/Tools/Rez -d __DARWIN__ -t APPL -d __WXMAC__ -i $(wxwidgets_path)/include -o $(1) Carbon.r ../examples/wxcairoclock/main.r; \
+    gen_app_file = /Developer/Tools/Rez -d __DARWIN__ -t APPL -d __WXMAC__ -i $(wxwidgets_path)/include -o $(1) Carbon.r graphics/main.r; \
 	/Developer/Tools/SetFile -a C $(1); \
 	mkdir -p $(1).app/Contents; \
 	mkdir -p $(1).app/Contents/MacOS; \
