@@ -63,14 +63,15 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="../../../build-output/production/bin"
+			IntermediateDirectory="../../../build-output/msvc/wxcairoclock"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="$(WXWIDGETS_LIB_DIR)/mswd;../../..;$(WXWIDGETS_INC_DIR);$(CAIRO_INC_DIR)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				RuntimeLibrary="4"
+				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -79,8 +80,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxexpat.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib oleacc.lib libcairo.lib"
 				OutputFile="$(OutDir)/wxcairoclock.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(CAIRO_LIB_DIR)&quot;;&quot;$(WXWIDGETS_LIB_DIR)&quot;"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
