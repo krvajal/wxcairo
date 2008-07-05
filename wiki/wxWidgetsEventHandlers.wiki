@@ -4,6 +4,7 @@
 
 || *The wxWidgets Event* || *Associated Event Handler* || *Description of Event* ||
 || [#wxEVT_CONTEXT_MENU_Example wxEVT_CONTEXT_MENU] || wxContextMenuEventHandler  || Event fired when a popup context menu is requested ||
+|| [#wxEVT_MOTION_Example wxEVT_MOTION] || wxMouseEventHandler || Event fired when the mouse moves ||
 || [#wxEVT_PAINT_Example wxEVT_PAINT] || wxPaintEventHandler || Event generated when part of a control or window is invalidated ||
 || [#wxEVT_SIZE_Example wxEVT_SIZE]   || wxSizeEventHandler  || Event generated when a control is resized ||
 
@@ -19,7 +20,7 @@ Connect(this->GetId(),
         wxSizeEventHandler(wxTrendPlot::OnSize));
 }}}
 
-Now we handle the OnSize event:
+Now we handle the wxEVT_SIZE event:
 
 {{{
 void wxTrendPlot::OnSize(wxSizeEvent& event)
@@ -44,7 +45,7 @@ Connect(wxID_ANY,
         wxPaintEventHandler(wxTrendPlot::OnPaint));
 }}}
 
-Now we handle the OnPaint event:
+Now we handle the wxEVT_PAINT event:
 
 {{{
 void wxTrendPlot::OnPaint(wxPaintEvent &WXUNUSED(event))
@@ -74,7 +75,7 @@ Connect(this->GetId(),
         wxContextMenuEventHandler(wxTrendPlot::OnContextMenu));
 }}}
 
-Now we handle the OnContextMenu event:
+Now we handle the wxEVT_CONTEXT_MENU event:
 
 {{{
 void wxTrendPlot::OnContextMenu(wxContextMenuEvent& WXUNUSED(event))
@@ -82,3 +83,24 @@ void wxTrendPlot::OnContextMenu(wxContextMenuEvent& WXUNUSED(event))
     PopupMenu(m_popup_menu);
 }
 }}}
+
+=== wxEVT_MOTION Example ===
+The following example demonstrates handling the wxEVT_MOTION event and the way it is connected using the Connect() function call:
+
+First we connect the OnMouseMove event handler:
+
+{{{
+Connect(this->GetId(),
+            wxEVT_MOTION,
+            wxMouseEventHandler(wxTrendPlot::OnMouseMove));
+}}}
+
+Now we handle the wxEVT_MOTION event:
+
+{{{
+void wxTrendPlot::OnContextMenu(wxContextMenuEvent& WXUNUSED(event))
+{
+    PopupMenu(m_popup_menu);
+}
+}}}
+
