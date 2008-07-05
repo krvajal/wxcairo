@@ -7,7 +7,29 @@
 
 
 === wxEVT_SIZE Example ===
-Blah blah blah
+The following example demonstrates handling the wxEVT_SIZE event and the way it is connected using the Connect() function call:
+
+First we connect the OnSize event handler:
+
+{{{
+Connect(this->GetId(),
+        wxEVT_SIZE,
+        wxSizeEventHandler(wxTrendPlot::OnSize));
+}}}
+
+Now we handle the OnSize event:
+
+{{{
+void wxTrendPlot::OnSize(wxSizeEvent& event)
+{
+    wxRect rect = GetClientRect();
+
+    ...
+
+    event.Skip();
+}
+
+}}}
 
 === wxEVT_PAINT Example ===
 Blah blah blah
