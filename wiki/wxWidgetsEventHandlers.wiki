@@ -98,9 +98,7 @@ Connect(this->GetId(),
 Now we handle the wxEVT_MOTION event:
 
 {{{
-void wxTrendPlot::OnContextMenu(wxContextMenuEvent& WXUNUSED(event))
+void wxTrendPlot::OnMouseMove(wxMouseEvent &event)
 {
-    PopupMenu(m_popup_menu);
-}
+    ...
 }}}
-
