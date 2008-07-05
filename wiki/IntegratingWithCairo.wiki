@@ -6,15 +6,29 @@ Normally when you write your OnPaint() handler you just use the native canvas to
 The following examples shows one way you might render using the native wxWidgets canvas using a double buffered DC to prevent flicker:
 
 {{{
-wxBitmap bmp;
 
-// Create a double buffer to draw the plot
-// on screen to prevent flicker from occuring.
-wxBufferedDC buff_dc;
-buff_dc.Init(&dc, bmp);
-buff_dc.Clear();
+void MyClass::OnPaint(wxPaintEvent &WXUNUSED(event))
+{
+    wxPaintDC dc(this);
+    
+    wxRect rect = GetClientRect();
+    
+    if(rect.width == 0 || rect.height == 0)
+    {
+        return;
+    }
 
-Render(false, &buff_dc, rect.width, rect.height);
+    wxBitmap bmp;
+
+    // Create a double buffer to draw the plot
+    // on screen to prevent flicker from occuring.
+    wxBufferedDC buff_dc;
+    buff_dc.Init(&dc, bmp);
+    buff_dc.Clear();
+
+    Render(false, &buff_dc, rect.width, rect.height);
+}
+
 }}}
 
 == Rendering on Windows ==
@@ -22,45 +36,61 @@ The following example demonstrates one method of rendering using Cairo. It's not
 
 {{{
 
-// Get the handle of the wxWindow
-HWND hwnd = (HWND)this->GetHandle();
+#include <cairo.h>
+#include <cairo-win32.h>
 
-// Now get the native windows DC for this window
-HDC hdc = ::GetDC(hwnd);
+void MyClass::OnPaint(wxPaintEvent &WXUNUSED(event))
+{
+    wxPaintDC dc(this);
+    
+    wxRect rect = GetClientRect();
+    
+    if(rect.width == 0 || rect.height == 0)
+    {
+        return;
+    }
 
-// Create a double buffer for blitting to
-// the screen to prevent screen flicker. Pass
-// the double buffer to cairo and blit it
-// in the paint routine.
-HDC dcbuffer = CreateCompatibleDC(hdc);
-HBITMAP hbuffer = CreateCompatibleBitmap(hdc, rect.width, rect.height);
-SelectObject(dcbuffer, hbuffer); 
+    // Get the handle of the wxWindow
+    HWND hwnd = (HWND)this->GetHandle();
 
-// Create a cairo surface we can draw on directly
-cairo_surface_t* cairo_surface = cairo_win32_surface_create(dcbuffer);
-cairo_t* cairo_image = cairo_create(cairo_surface);
+    // Now get the native windows DC for this window
+    HDC hdc = ::GetDC(hwnd);
 
-// Render the output into the cairo image
-Render(cairo_image, rect.width, rect.height);
+    // Create a double buffer for blitting to
+    // the screen to prevent screen flicker. Pass
+    // the double buffer to cairo and blit it
+    // in the paint routine.
+    HDC dcbuffer = CreateCompatibleDC(hdc);
+    HBITMAP hbuffer = CreateCompatibleBitmap(hdc, rect.width, rect.height);
+    SelectObject(dcbuffer, hbuffer); 
 
-// Now blit the object to the screen
-BitBlt(hdc, 0, 0, rect.width, rect.height, dcbuffer, 0, 0, SRCCOPY);
+    // Create a cairo surface we can draw on directly
+    cairo_surface_t* cairo_surface = cairo_win32_surface_create(dcbuffer);
+    cairo_t* cairo_image = cairo_create(cairo_surface);
 
-// Tear down the cairo object now that we don't need
-// it anymore.
-cairo_destroy(cairo_image);
-cairo_surface_destroy(cairo_surface);
+    // Render the output into the cairo image
+    Render(cairo_image, rect.width, rect.height);
 
-DeleteDC(dcbuffer);
-DeleteObject(hbuffer);
+    // Now blit the object to the screen
+    BitBlt(hdc, 0, 0, rect.width, rect.height, dcbuffer, 0, 0, SRCCOPY);
 
-// Because we called ::GetDC make sure we release the handle
-// back to the system or we'll have a memory leak.
-::ReleaseDC(hwnd,hdc);
+    // Tear down the cairo object now that we don't need
+    // it anymore.
+    cairo_destroy(cairo_image);
+    cairo_surface_destroy(cairo_surface);
+
+    DeleteDC(dcbuffer);
+    DeleteObject(hbuffer);
+
+    // Because we called ::GetDC make sure we release the handle
+    // back to the system or we'll have a memory leak.
+    ::ReleaseDC(hwnd,hdc);
+}
+
 }}}
 
-== Rendering on an Intel MAC ==
-The most recent versions of MAC OS provide very good quality native rendering. However, if you want to use Cairo for rendering on all your target platforms here is an example of how to do it. This does seem to be an issue sometimes where you may see the following line printed on the console:
+== Rendering on MAC OSX ==
+The most recent versions of MAC OS provide very good quality native rendering with wxWidgets. However, if you want to use Cairo for rendering on all your target platforms here is an example of how to do it. This does seem to be an issue sometimes where you may see the following line printed on the console:
 
 {{{
     CGContextRestoreGState: invalid context
@@ -69,76 +99,135 @@ The most recent versions of MAC OS provide very good quality native rendering. H
 It doesn't impact the drawing or the program but is annoying.
 
 {{{
-CGContextRef context = (CGContextRef) dc.GetGraphicsContext()->GetNativeContext();
-            
-if(context == 0)
-{
-    return;
-}
-            
-cairo_surface_t* cairo_surface = cairo_quartz_surface_create_for_cg_context(context, rect.width, rect.height);
-cairo_t* cairo_image = cairo_create(cairo_surface);
-            
-Render(cairo_image, rect.width, rect.height);
-cairo_surface_flush(cairo_surface);
-            
-CGContextFlush( context );
-cairo_surface_destroy(cairo_surface);
-cairo_destroy(cairo_image);
 
+void MyClass::OnPaint(wxPaintEvent &WXUNUSED(event))
+{
+    wxPaintDC dc(this);
+    
+    wxRect rect = GetClientRect();
+    
+    if(rect.width == 0 || rect.height == 0)
+    {
+        return;
+    }
+
+    CGContextRef context = (CGContextRef) dc.GetGraphicsContext()->GetNativeContext();
+            
+    if(context == 0)
+    {
+        return;
+    }
+            
+    cairo_surface_t* cairo_surface = cairo_quartz_surface_create_for_cg_context(context, rect.width, rect.height);
+    cairo_t* cairo_image = cairo_create(cairo_surface);
+            
+    Render(cairo_image, rect.width, rect.height);
+    cairo_surface_flush(cairo_surface);
+            
+    CGContextFlush( context );
+    cairo_surface_destroy(cairo_surface);
+    cairo_destroy(cairo_image);
+}
+
+}}}
+
+== Rendering with GTK ==
+If it's GTK then it's fairly straight forward, simply call the gdk_cairo_create() method and it will return a cairo context directly as shown in the example below:
+
+{{{
+#include <gdk/gdk.h>
+#include <gtk/gtk.h>
+#include <cairo.h>
+
+void MyClass::OnPaint(wxPaintEvent &WXUNUSED(event))
+{
+    wxPaintDC dc(this);
+    
+    wxRect rect = GetClientRect();
+    
+    if(rect.width == 0 || rect.height == 0)
+    {
+        return;
+    }
+
+    // If it's GTK then use the gdk_cairo_create() method. The GdkDrawable object
+    // is stored in m_window of the wxPaintDC.
+    cairo_t* cairo_image = gdk_cairo_create(dc.m_window);
+    Render(cairo_image, rect.width, rect.height);
+    cairo_destroy(cairo_image);
+}
+
+}}}
 
 == Platform Independent Rendering to a Buffer ==
 On platforms such as X11 where the it's currently unknown how to directly use Cairo to render to a DC it is possible to render to an image and then blit that image to screen using a wxBufferedDC.
 
-There are probably more efficient ways of doing this. If there are please make a suggestion. 
+There are probably vastly more efficient ways of doing this but the following example demonstrates one way to do it:
 
 {{{
+#include <cairo.h>
 
-// Allocate a buffer large enough to store the image data. Use malloc()
-// instead of new(). Each 
-unsigned int image_buffer_len = rect.width * rect.height * 4;
-unsigned char* image_buffer = (unsigned char*)malloc(image_buffer_len);
+void MyClass::OnPaint(wxPaintEvent &WXUNUSED(event))
+{
+    wxPaintDC dc(this);
+    
+    wxRect rect = GetClientRect();
+    
+    if(rect.width == 0 || rect.height == 0)
+    {
+        return;
+    }
 
-cairo_surface_t* cairo_surface = cairo_image_surface_create_for_data(
+    // Allocate a buffer large enough to store the image data. Use malloc()
+    // instead of new(). Each 
+    unsigned int image_buffer_len = rect.width * rect.height * 4;
+    unsigned char* image_buffer = (unsigned char*)malloc(image_buffer_len);
+
+    cairo_surface_t* cairo_surface = cairo_image_surface_create_for_data(
                                 image_buffer,
                                 CAIRO_FORMAT_RGB24,
                                 rect.width,
                                 rect.height,
                                 rect.width * 4);
-cairo_t* cairo_image = cairo_create(cairo_surface);
+    cairo_t* cairo_image = cairo_create(cairo_surface);
 
-// Render your object here
-Render(cairo_image, rect.width, rect.height);
+    // Render your object here
+    Render(cairo_image, rect.width, rect.height);
 
-// Now translate the raw image data from the format stored
-// by cairo into a format understood by wxImage.
-unsigned char* output = (unsigned char*)malloc(image_buffer_len);
-int offset = 0;
-for(size_t count = 0; count < image_buffer_len; count+=4)
-{
-    int r = *(image_buffer+count+2);
-    *(output + offset) = r;
-    offset++;
-    int g = *(image_buffer+count+1);
-    *(output + offset) = g;
-    offset++;
-    int b = *(image_buffer+count+0);
-    *(output + offset) = b;
-    offset++;
-} 
+    // Now translate the raw image data from the format stored
+    // by cairo into a format understood by wxImage.
+    unsigned char* output = (unsigned char*)malloc(image_buffer_len);
+    int offset = 0;
+    for(size_t count = 0; count < image_buffer_len; count+=4)
+    {
+        int r = *(image_buffer+count+2);
+        *(output + offset) = r;
+        offset++;
+        int g = *(image_buffer+count+1);
+        *(output + offset) = g;
+        offset++;
+        int b = *(image_buffer+count+0);
+        *(output + offset) = b;
+        offset++;
+    } 
 
-// Create a wxImage from the buffer and then a wxBitmap from that
-wxImage img(rect.width, rect.height, output, true);
-wxBitmap bmp(img);
-wxClientDC client_dc(this);
+    // Create a wxImage from the buffer and then a wxBitmap from that
+    wxImage img(rect.width, rect.height, output, true);
+    wxBitmap bmp(img);
+    wxClientDC client_dc(this);
 
-// Create a double buffer to draw the plot
-// on screen to prevent flicker from occuring.
-wxBufferedDC dc;
-dc.Init(&client_dc, bmp);
+    // Create a double buffer to draw the plot
+    // on screen to prevent flicker from occuring.
+    wxBufferedDC dc;
+    dc.Init(&client_dc, bmp);
 
-cairo_destroy(cairo_image);
-cairo_surface_destroy(cairo_surface);
-free(image_buffer);
-free(output);
+    cairo_destroy(cairo_image);
+    cairo_surface_destroy(cairo_surface);
+    free(image_buffer);
+    free(output);
 }}}
+
+
+== Improving Performance ==
+Instead of constantly allocating and destroying objects you may want to experiment with allocating and tearing down buffers in the OnSize() handler for your class instead of doing them in the OnPaint() handle. This will avoid having to constantly hit the heap and will result in improved performance.
+ 
