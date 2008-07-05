@@ -4,6 +4,7 @@
 
 || *The wxWidgets Event* || *Associated Event Handler* || *Description of Event* ||
 || [#wxEVT_CONTEXT_MENU_Example wxEVT_CONTEXT_MENU] || wxContextMenuEventHandler  || Event fired when a popup context menu is requested ||
+|| [#wxEVT_KEY_DOWN_Example wxEVT_KEY_DOWN] || wxKeyEventHandler || Event fired when the user presses a key ||
 || [#wxEVT_MOTION_Example wxEVT_MOTION] || wxMouseEventHandler || Event fired when the mouse moves ||
 || [#wxEVT_PAINT_Example wxEVT_PAINT] || wxPaintEventHandler || Event generated when part of a control or window is invalidated ||
 || [#wxEVT_SIZE_Example wxEVT_SIZE]   || wxSizeEventHandler  || Event generated when a control is resized ||
@@ -98,7 +99,61 @@ Connect(this->GetId(),
 Now we handle the wxEVT_MOTION event:
 
 {{{
+
 void wxTrendPlot::OnMouseMove(wxMouseEvent &event)
 {
     ...
+}
+
+}}}
+
+
+=== wxEVT_KEY_DOWN Example ===
+The following example demonstrates handling the wxEVT_KEY_DOWN event and the way it is connected using the Connect() function call:
+
+First we connect the OnMouseMove event handler:
+
+{{{
+Connect(this->GetId(),
+        wxEVT_KEY_DOWN,
+        wxKeyEventHandler(wxTrendPlot::OnKeyDown));
+
+}}}
+
+Now we handle the wxEVT_KEY_DOWN event:
+
+{{{
+void wxTrendPlot::OnKeyDown(wxKeyEvent& event)
+{
+    // If it is the home key then go back to the beginning
+    if(event.m_keyCode == WXK_HOME)
+    {
+        m_start_plot_x = 0;
+        m_pause_point = m_start_plot_x;
+        //DrawPlot();
+        return;
+    }
+    else if(event.m_keyCode == WXK_END)
+    {
+        m_start_plot_x = m_end_point - m_x_axis_width;
+        m_pause_point = m_start_plot_x;
+        //DrawPlot();
+        return;
+    }
+    else if((event.m_keyCode == '+' || event.m_keyCode == WXK_NUMPAD_ADD))
+    {
+        Zoom(2);
+    }
+    else if((event.m_keyCode == '-' || event.m_keyCode == WXK_NUMPAD_SUBTRACT))
+    {
+        Zoom(0.5);
+    }
+    else if(event.m_keyCode == WXK_PAUSE)
+    {
+        Pause(!m_is_paused);
+    }
+
+    event.Skip();
+}
+
 }}}
