@@ -3,8 +3,9 @@
 == Event Handlers in wxWidgets ==
 
 || *The wxWidgets Event* || *Associated Event Handler* || *Description of Event* ||
-|| [#wxEVT_SIZE_Example wxEVT_SIZE]   || wxSizeEventHandler  || Event generated when a control is resized ||
+|| [#wxEVT_CONTEXT_MENU_Example wxEVT_CONTEXT_MENU] || wxContextMenuEventHandler  || Event fired when a popup context menu is requested ||
 || [#wxEVT_PAINT_Example wxEVT_PAINT] || wxPaintEventHandler || Event generated when part of a control or window is invalidated ||
+|| [#wxEVT_SIZE_Example wxEVT_SIZE]   || wxSizeEventHandler  || Event generated when a control is resized ||
 
 
 === wxEVT_SIZE Example ===
@@ -58,5 +59,26 @@ void wxTrendPlot::OnPaint(wxPaintEvent &WXUNUSED(event))
     }
 
     ...
+}
+}}}
+
+
+=== wxEVT_CONTEXT_MENU Example ===
+The following example demonstrates handling the wxEVT_CONTEXT_MENU event and the way it is connected using the Connect() function call:
+
+First we connect the OnPaint event handler:
+
+{{{
+Connect(this->GetId(),
+        wxEVT_CONTEXT_MENU,
+        wxContextMenuEventHandler(wxTrendPlot::OnContextMenu));
+}}}
+
+Now we handle the OnContextMenu event:
+
+{{{
+void wxTrendPlot::OnContextMenu(wxContextMenuEvent& WXUNUSED(event))
+{
+    PopupMenu(m_popup_menu);
 }
 }}}
