@@ -2,7 +2,12 @@
 
 == Event Handlers in wxWidgets ==
 
-|| [#wxEVT_SIZE_Example | wxEVT_SIZE] || wxSizeEventHandler
+|| [#wxEVT_SIZE_Example wxEVT_SIZE]   || wxSizeEventHandler  ||
+|| [#wxEVT_PAINT_Example wxEVT_PAINT] || wxPaintEventHandler ||
+
 
 === wxEVT_SIZE Example ===
+Blah blah blah
+
+=== wxEVT_PAINT Example ===
 Blah blah blah
