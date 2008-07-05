@@ -1,0 +1,8 @@
+#summary A Summary of Event Handlers in wxWidgets
+
+== Event Handlers in wxWidgets ==
+
+|| [#wxEVT_SIZE_Example | wxEVT_SIZE] || wxSizeEventHandler
+
+=== wxEVT_SIZE Example ===
+Blah blah blah
