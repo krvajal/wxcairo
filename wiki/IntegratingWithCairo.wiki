@@ -1,9 +1,10 @@
 #summary Integrating with Cairo
 
 == Rendering without Cairo ==
-Normally when you write your OnPaint() handler we just use the native canvas to draw to screen. This is fast but doesn't always produce good results due to aliasing:
+Normally when you write your OnPaint() handler you just use the native canvas to draw to screen. This is fast but doesn't always produce good results due to aliasing:
 
 The following examples shows one way you might render using the native wxWidgets canvas using a double buffered DC to prevent flicker:
+
 {{{
 wxBitmap bmp;
 
@@ -16,8 +17,74 @@ buff_dc.Clear();
 Render(false, &buff_dc, rect.width, rect.height);
 }}}
 
-
 == Rendering on Windows ==
+The following example demonstrates one method of rendering using Cairo. It's not the most efficient due to the amount of extra copying that occurs.
+
+{{{
+
+// Get the handle of the wxWindow
+HWND hwnd = (HWND)this->GetHandle();
+
+// Now get the native windows DC for this window
+HDC hdc = ::GetDC(hwnd);
+
+// Create a double buffer for blitting to
+// the screen to prevent screen flicker. Pass
+// the double buffer to cairo and blit it
+// in the paint routine.
+HDC dcbuffer = CreateCompatibleDC(hdc);
+HBITMAP hbuffer = CreateCompatibleBitmap(hdc, rect.width, rect.height);
+SelectObject(dcbuffer, hbuffer); 
+
+// Create a cairo surface we can draw on directly
+cairo_surface_t* cairo_surface = cairo_win32_surface_create(dcbuffer);
+cairo_t* cairo_image = cairo_create(cairo_surface);
+
+// Render the output into the cairo image
+Render(cairo_image, rect.width, rect.height);
+
+// Now blit the object to the screen
+BitBlt(hdc, 0, 0, rect.width, rect.height, dcbuffer, 0, 0, SRCCOPY);
+
+// Tear down the cairo object now that we don't need
+// it anymore.
+cairo_destroy(cairo_image);
+cairo_surface_destroy(cairo_surface);
+
+DeleteDC(dcbuffer);
+DeleteObject(hbuffer);
+
+// Because we called ::GetDC make sure we release the handle
+// back to the system or we'll have a memory leak.
+::ReleaseDC(hwnd,hdc);
+}}}
+
+== Rendering on an Intel MAC ==
+The most recent versions of MAC OS provide very good quality native rendering. However, if you want to use Cairo for rendering on all your target platforms here is an example of how to do it. This does seem to be an issue sometimes where you may see the following line printed on the console:
+
+{{{
+    CGContextRestoreGState: invalid context
+}}}
+
+It doesn't impact the drawing or the program but is annoying.
+
+{{{
+CGContextRef context = (CGContextRef) dc.GetGraphicsContext()->GetNativeContext();
+            
+if(context == 0)
+{
+    return;
+}
+            
+cairo_surface_t* cairo_surface = cairo_quartz_surface_create_for_cg_context(context, rect.width, rect.height);
+cairo_t* cairo_image = cairo_create(cairo_surface);
+            
+Render(cairo_image, rect.width, rect.height);
+cairo_surface_flush(cairo_surface);
+            
+CGContextFlush( context );
+cairo_surface_destroy(cairo_surface);
+cairo_destroy(cairo_image);
 
 
 == Platform Independent Rendering to a Buffer ==
