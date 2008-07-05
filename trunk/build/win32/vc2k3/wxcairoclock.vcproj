@@ -23,7 +23,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -32,7 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxexpatd.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib oleacc.lib libcairo.lib"
+				AdditionalDependencies="wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxexpatd.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib oleacc.lib libcairod.lib"
 				OutputFile="$(OutDir)/wxcairoclock.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(CAIRO_LIB_DIR)&quot;;&quot;$(WXWIDGETS_LIB_DIR)&quot;"
@@ -71,7 +71,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="$(WXWIDGETS_LIB_DIR)/mswd;../../..;$(WXWIDGETS_INC_DIR);$(CAIRO_INC_DIR)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
