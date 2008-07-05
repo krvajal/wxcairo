@@ -2,7 +2,7 @@
 
 == Event Handlers in wxWidgets ==
 
-|| The wxWidgets Event || Associated Event Handler || Description of Event ||
+|| *The wxWidgets Event* || *Associated Event Handler* || *Description of Event* ||
 || [#wxEVT_SIZE_Example wxEVT_SIZE]   || wxSizeEventHandler  || Event generated when a control is resized ||
 || [#wxEVT_PAINT_Example wxEVT_PAINT] || wxPaintEventHandler || Event generated when part of a control or window is invalidated ||
 
