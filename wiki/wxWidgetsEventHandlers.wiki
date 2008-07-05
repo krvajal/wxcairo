@@ -32,4 +32,31 @@ void wxTrendPlot::OnSize(wxSizeEvent& event)
 }}}
 
 === wxEVT_PAINT Example ===
-Blah blah blah
+The following example demonstrates handling the wxEVT_PAINT event and the way it is connected using the Connect() function call:
+
+First we connect the OnPaint event handler:
+
+{{{
+Connect(wxID_ANY,
+        wxEVT_PAINT,
+        wxPaintEventHandler(wxTrendPlot::OnPaint));
+}}}
+
+Now we handle the OnPaint event:
+
+{{{
+void wxTrendPlot::OnPaint(wxPaintEvent &WXUNUSED(event))
+{
+    wxPaintDC dc(this);
+    
+    wxRect rect = GetClientRect();
+    
+    if(rect.width == 0 || rect.height == 0)
+    {
+        return;
+    }
+
+    ...
+}
+}}}
+
