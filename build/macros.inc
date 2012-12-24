@@ -4,11 +4,11 @@
 #    macros.inc
 # 
 # PROJECT:
-#    Xframe toolbox
+#    wxcairo
 #
 # FILE DESCRIPTION:
 #    Macro definitions for the master makefile
-#    for the Xframe toolbox
+#    for the wxcairo demos
 #
 # CREATED BY:
 #    Brad Elliott (Jan 14, 2008)
@@ -72,7 +72,7 @@ endif
 
 # Cairo paths
 cairo_path          = ../../../3rdparty/cairo
-cairo_include_paths = -I$(cairo_path)/src
+cairo_include_paths = -I/usr/include/cairo
 
 
 # WxWidgets paths
@@ -81,13 +81,14 @@ wxwidgets_lib_paths     = -L$(wxwidgets_path)/compiles/$(platform)/lib
 
 
 ifeq ($(platform),linux)
-    wxwidgets_include_paths = -I$(wxwidgets_path)/compiles/linux/lib/wx/include/linux-ansi-release-static-2.8 \
-                              -I$(wxwidgets_path)/include \
-                              -I$(wxwidgets_path)/compiles/linux/lib/wx/include/gtk2-ansi-release-static-2.8
-    wxwidgets-defines = -D__WXGTK__ -DWX_PRECOMP -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES \
-            -I/opt/gnome/include/gtk-2.0 \
-            -I/opt/gnome/lib/gtk-2.0/include -I/opt/gnome/include/atk-1.0 \
-            -I/opt/gnome/include/pango-1.0 -I/opt/gnome/include/glib-2.0 -I/opt/gnome/lib/glib-2.0/include \
+    wxwidgets-defines = \
+            -I/usr/include/gtk-2.0 -I/usr/include/glib-2.0 \
+            -I/usr/lib/i386-linux-gnu/glib-2.0/include \
+            -I/usr/lib/i386-linux-gnu/gtk-2.0/include \
+            -I/usr/lib/gtk-2.0/include \
+            -I/usr/include/atk-1.0 \
+            -I/usr/include/pango-1.0 \
+            -I/usr/include/gdk-pixbuf-2.0 \
             -Wall -Wundef -Wno-ctor-dtor-privacy -O2 -fno-strict-aliasing -fno-common
             
 else
@@ -99,21 +100,20 @@ endif
 
 
 
-# Xframe library include paths
+# wxcairo library include paths
 wxcairo-inc := -I $(srcPrefix) \
                -I . \
-               $(wxwidgets_include_paths) \
+               `wx-config --cppflags` \
                $(cairo_include_paths)
 
 ifeq ($(RELEASE),yes)
-    wxcairo-defines := $(wxwidgets-defines) -DWXCAIRO -g -W -Werror -I/Developer/Headers/FlatCarbon -Wall -Wundef -Wno-ctor-dtor-privacy -fno-strict-aliasing -fno-common
+    wxcairo-defines := $(wxwidgets-defines) -DWXCAIRO -g -W -Werror -Wall -Wundef -Wno-ctor-dtor-privacy -fno-strict-aliasing -fno-common
 else
     wxcairo-defines := $(wxwidgets-defines) -DWXCAIRO -DDEBUG -DWXCAIRO -g -W -Wall -Wundef -Wno-ctor-dtor-privacy -fno-strict-aliasing -fno-common
 endif
 
 ifeq ($(platform),linux)
-    wxcairo-linker := $(wxwidgets_lib_paths) \
-            	-L/usr/local/lib -pthread -lwx_gtk2-2.8 -lpthread -L/opt/gnome/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lfreetype -lz -lfontconfig -lexpat -lglitz -lm -lpng12 -lXrender -lX11 -lpthread -lXau -lXdmcp -lgthread-2.0 -lglib-2.0 -lXinerama -lSM -lpng -lz -lwxtiff-2.8 -lwxjpeg-2.8 -lz -ldl -lm
+    wxcairo-linker := `wx-config --libs` 
 else
     wxcairo-linker := $(wxwidgets_lib_paths) \
                 -lz -lpthread -liconv -lwx_mac-2.8 -lwxtiff-2.8 -lwxjpeg-2.8 -lwxpng-2.8 -lwxexpat-2.8 \
