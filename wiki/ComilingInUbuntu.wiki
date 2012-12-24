@@ -9,11 +9,11 @@ The following packages are necessary for compiling under Ubuntu 12.10:
   sudo apt-get install wx2.8-headers libwxgtk2.8.0 libwxgtk2.8-dev
 }}}
 
-For some reason in my test environment wxWidgets applications don't run properly unless I run them as sudo:
+For some reason in my test environment wxWidgets applications don't run properly unless I run them as sudo. Haven't had a chance to figure out why that happens:
 
 {{{
-svn checkout http://wxcairo.googlecode.com/svn/trunk/ wxcairo-read-only
-cd wxcairo-read-only/
-make
-sudo build-output/production/bin/wxcairoclock
+  svn checkout http://wxcairo.googlecode.com/svn/trunk/ wxcairo-read-only
+  cd wxcairo-read-only/
+  make
+  sudo build-output/production/bin/wxcairoclock
 }}}
