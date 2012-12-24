@@ -68,14 +68,18 @@ IMPLEMENT_APP(Application)
 // `Main program' equivalent: the program execution "starts" here
 bool Application::OnInit()
 {
+    wxString title = wxT("Cairo Clock Example");
+
     // Create the main application window
-    wxMainForm* form = new wxMainForm(_T("Cairo Clock Example"),
+    wxMainForm* form = new wxMainForm(title,
                                       wxPoint(50, 50),
                                       wxSize(550, 340));
 
-    // Show it and tell the application that it's our main window
     form->Show(true);
+
+    // Show it and tell the application that it's our main window
     SetTopWindow(form);
+
     
     return true;
 }
@@ -112,25 +116,25 @@ wxMainForm::wxMainForm(const wxString& title,
     
     SetBackgroundColour(*wxWHITE);
     m_clockPanel = new wxCairoClock(this);
-    
+
     // create a menu bar
     wxMenu *fileMenu = new wxMenu;
 
     // the "About" item should be in the help menu
     wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show about dialog"));
-    fileMenu->Append(wxID_EXIT, _T("E&xit\tAlt-X"), _T("Quit this program"));
+    helpMenu->Append(wxID_ABOUT, wxT("&About...\tF1"), wxT("Show about dialog"));
+    fileMenu->Append(wxID_EXIT, wxT("E&xit\tAlt-X"), wxT("Quit this program"));
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
-    menuBar->Append(fileMenu, _T("&File"));
-    menuBar->Append(helpMenu, _T("&Help"));
+    menuBar->Append(fileMenu, wxT("&File"));
+    menuBar->Append(helpMenu, wxT("&Help"));
 
     // ... and attach this menu bar to the frame
     SetMenuBar(menuBar);
     
     CreateStatusBar(2);
-    SetStatusText(_T("Cairo Clock Demonstration Program"));
+    SetStatusText(wxT("Cairo Clock Demonstration Program"));
    
     // Connect the event handlers - the macros are such a nasty way
     // of doing this. This is better. 
@@ -202,10 +206,10 @@ void wxMainForm::OnQuit(wxCommandEvent& WXUNUSED(event))
 //+-------------------------------------------------------------------------------
 void wxMainForm::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(_T("Welcome to another Cairo Clock\n")
-                 _T("This is a demonstration program showing how to manually\n")
-                 _T("draw a clock using the cairo library."),
-                 _T("Cairo Clock Demo"),
+    wxMessageBox(wxT("Welcome to another Cairo Clock\n")
+                 wxT("This is a demonstration program showing how to manually\n")
+                 wxT("draw a clock using the cairo library."),
+                 wxT("Cairo Clock Demo"),
                  wxOK | wxICON_INFORMATION,
                  this);
 }

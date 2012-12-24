@@ -88,12 +88,12 @@ wxSpeedometer::wxSpeedometer( wxWindow *parent ) : wxPanel(parent, wxID_ANY)
             wxCommandEventHandler(wxSpeedometer::OnDoAction));
                     
     // Create the popup menus
-    m_popup_menu = new wxMenu("");
-    wxMenuItem* item = m_popup_menu->AppendRadioItem(wxID_ANY, "Native");
+    m_popup_menu = new wxMenu(wxT(""));
+    wxMenuItem* item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Native"));
     m_menu_native_render = item->GetId();
-    item = m_popup_menu->AppendRadioItem(wxID_ANY, "Cairo Buffer");
+    item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Cairo Buffer"));
     m_menu_cairo_render_buffer = item->GetId();
-    item = m_popup_menu->AppendRadioItem(wxID_ANY, "Cairo Native");
+    item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Cairo Native"));
     m_menu_cairo_render_native = item->GetId();
     
     // Enable native cairo rendering by default
@@ -472,7 +472,7 @@ void wxSpeedometer::Draw(bool     use_cairo,
         {
             cairo_text_extents_t extents;
             cairo_text_extents (cairo_image,
-                                wxString::Format("%2.2f", (index - 1) * 1000).c_str(),
+                                wxString::Format(wxT("%2.2f"), (index - 1) * 1000).char_str(),
                                 &extents);
             
             if(index <= 1.5)
@@ -480,13 +480,13 @@ void wxSpeedometer::Draw(bool     use_cairo,
                 cairo_move_to(cairo_image,
                               cx + radius * 1.03 * cos(index * PI) - extents.width,
                               cy + radius * 1.06 * sin(index * PI));
-                cairo_show_text (cairo_image, wxString::Format("%2.2f", (index - 1) * 1000).c_str());
+                cairo_show_text (cairo_image, wxString::Format(wxT("%2.2f"), (index - 1) * 1000).char_str());
                 
                 cairo_move_to(cairo_image,
                               cx - radius * 1.03 * cos(index * PI),
                               cy + radius * 1.06 * sin(index * PI));
                 
-                cairo_show_text (cairo_image, wxString::Format("%2.2f", (1.0 - (index - 1)) * 1000).c_str());
+                cairo_show_text (cairo_image, wxString::Format(wxT("%2.2f"), (1.0 - (index - 1)) * 1000).char_str());
                 
             }
             else if(index > 1.45 && index < 1.55)
@@ -494,7 +494,7 @@ void wxSpeedometer::Draw(bool     use_cairo,
                 cairo_move_to(cairo_image,
                               cx + radius * 1.03 * cos(index * PI) - extents.width/2,
                               cy + radius * 1.06 * sin(index * PI));
-                cairo_show_text (cairo_image, wxString::Format("%2.2f", (index - 1) * 1000).c_str());
+                cairo_show_text (cairo_image, wxString::Format(wxT("%2.2f"), (index - 1) * 1000).char_str());
             }
         }
     }
@@ -613,22 +613,22 @@ void wxSpeedometer::Draw(bool     use_cairo,
             wxCoord width;
             wxCoord height;
             
-            dc->GetTextExtent(wxString::Format("%2.2f", (index - 1) * 1000).c_str(),
+            dc->GetTextExtent(wxString::Format(wxT("%2.2f"), (index - 1) * 1000).c_str(),
                              &width, &height, 0, 0, &font);
                      
             if(index <= 1.5)
             {
-                dc->DrawText(wxString::Format("%2.2f", (index - 1) * 1000),
+                dc->DrawText(wxString::Format(wxT("%2.2f"), (index - 1) * 1000),
                             cx + radius * 1.03 * cos(index * PI) - width,
                             cy + radius * 1.06 * sin(index * PI) - height/2);
                 
-                dc->DrawText(wxString::Format("%2.2f", (1.0 - (index - 1)) * 1000),
+                dc->DrawText(wxString::Format(wxT("%2.2f"), (1.0 - (index - 1)) * 1000),
                             cx - radius * 1.03 * cos(index * PI),
                               cy + radius * 1.06 * sin(index * PI) - height/2);
             }
             else if(index > 1.45 && index < 1.55)
             {
-                dc->DrawText(wxString::Format("%2.2f", (index - 1) * 1000),
+                dc->DrawText(wxString::Format(wxT("%2.2f"), (index - 1) * 1000),
                             cx + radius * 1.03 * cos(index * PI) - width/2,
                             cy + radius * 1.06 * sin(index * PI) - height/2);
             }

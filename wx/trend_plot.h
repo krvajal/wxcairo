@@ -90,14 +90,14 @@ class wxTrendPlot: public wxScrolledWindow
         // this plot.
         bool AddPoint(size_t set_handle, double x, double y);
         
-        size_t AddDataSet(const char* label, wxColour color);
+        size_t AddDataSet(const wxString& label, wxColour color);
         void RemoveDataSet(std::vector<wxTrendPlotDataset>::iterator& match);
         
         void UpdatePlot(void);
 
-        void SetStatusText(const char* text);
+        void SetStatusText(const wxString& text);
         
-        void SetTitle(const std::string& title, bool show=false)
+        void SetTitle(const wxString& title, bool show=false)
         {
             m_title = title;
             m_show_title = show;
@@ -108,7 +108,7 @@ class wxTrendPlot: public wxScrolledWindow
             m_show_title = show;
         }
         
-        void SetXAxisTitle(const std::string& title, bool show=false)
+        void SetXAxisTitle(const wxString& title, bool show=false)
         {
             m_x_axis_title = title;
             m_show_x_axis_title = show;
@@ -119,7 +119,7 @@ class wxTrendPlot: public wxScrolledWindow
             m_show_x_axis_title = show;
         }
         
-        void SetYAxisTitle(const std::string& title, bool show=false)
+        void SetYAxisTitle(const wxString& title, bool show=false)
         {
             m_y_axis_title = title;
             m_show_y_axis_title = show;
@@ -189,13 +189,13 @@ class wxTrendPlot: public wxScrolledWindow
         std::vector<wxTrendPlotDataset> m_data_sets;
         
         bool m_show_title;
-        std::string m_title;
+        wxString m_title;
         
         bool m_show_x_axis_title;
-        std::string m_x_axis_title;
+        wxString m_x_axis_title;
 
         bool m_show_y_axis_title;
-        std::string m_y_axis_title;
+        wxString m_y_axis_title;
         
         double m_x_axis_width;
         double m_zoom_factor;

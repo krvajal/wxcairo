@@ -76,11 +76,11 @@ class wxMainForm : public wxFrame
                    const wxPoint&  pos,
                    const wxSize&   size);
         
+    private:
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         void OnSize(wxSizeEvent& event);
     
-    private:
         wxCairoClock* m_clockPanel;
 };
 

@@ -80,13 +80,14 @@
 //+------------------------------------------------------------------------------
 wxCairoClock::wxCairoClock(wxWindow *parent) : wxPanel(parent, wxID_ANY)
 {
+    m_popup_menu = new wxMenu(wxT(""));
+
     // Create the popup menus
-    m_popup_menu = new wxMenu("");
-    wxMenuItem* item = m_popup_menu->AppendRadioItem(wxID_ANY, "Native");
+    wxMenuItem* item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Native"));
     m_menu_native_render = item->GetId();
-    item = m_popup_menu->AppendRadioItem(wxID_ANY, "Cairo Buffer");
+    item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Cairo Buffer"));
     m_menu_cairo_render_buffer = item->GetId();
-    item = m_popup_menu->AppendRadioItem(wxID_ANY, "Cairo Native");
+    item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Cairo Native"));
     m_menu_cairo_render_native = item->GetId();
     
     // Enable native cairo rendering by default
@@ -114,7 +115,6 @@ wxCairoClock::wxCairoClock(wxWindow *parent) : wxPanel(parent, wxID_ANY)
             wxEVT_ERASE_BACKGROUND,
             wxEraseEventHandler(wxCairoClock::OnEraseBackground));
             
-    
     // Connect the on-popup menu event handler
     Connect(this->GetId(),
             wxEVT_CONTEXT_MENU,
@@ -839,7 +839,7 @@ void wxCairoClock::OnPaint(wxPaintEvent &WXUNUSED(event))
     {
         return;
     }
-    
+
     switch(m_renderer)
     {
         // In this case we could try allocating any memory objects
