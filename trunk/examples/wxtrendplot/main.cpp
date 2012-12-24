@@ -69,7 +69,7 @@ IMPLEMENT_APP(Application)
 bool Application::OnInit()
 {
     // Create the main application window
-    wxMainForm* form = new wxMainForm(_T("Cairo Clock Example"),
+    wxMainForm* form = new wxMainForm(wxT("Cairo Clock Example"),
                                       wxPoint(50, 50),
                                       wxSize(550, 340));
 
@@ -112,9 +112,9 @@ wxMainForm::wxMainForm(const wxString& title,
     
     SetBackgroundColour(*wxWHITE);
     m_trend_plot = new wxTrendPlot(this, this);
-    m_trend_plot->SetTitle("wxTrendPlot Demo",true);
-    m_trend_plot->SetXAxisTitle("X-Axis",true);
-    m_trend_plot->SetYAxisTitle("Y-Axis",true);
+    m_trend_plot->SetTitle(wxT("wxTrendPlot Demo"),true);
+    m_trend_plot->SetXAxisTitle(wxT("X-Axis"),true);
+    m_trend_plot->SetYAxisTitle(wxT("Y-Axis"),true);
 
     
     // create a menu bar
@@ -122,19 +122,19 @@ wxMainForm::wxMainForm(const wxString& title,
 
     // the "About" item should be in the help menu
     wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show about dialog"));
-    fileMenu->Append(wxID_EXIT, _T("E&xit\tAlt-X"), _T("Quit this program"));
+    helpMenu->Append(wxID_ABOUT, wxT("&About...\tF1"), wxT("Show about dialog"));
+    fileMenu->Append(wxID_EXIT, wxT("E&xit\tAlt-X"), wxT("Quit this program"));
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
-    menuBar->Append(fileMenu, _T("&File"));
-    menuBar->Append(helpMenu, _T("&Help"));
+    menuBar->Append(fileMenu, wxT("&File"));
+    menuBar->Append(helpMenu, wxT("&Help"));
 
     // ... and attach this menu bar to the frame
     SetMenuBar(menuBar);
     
     CreateStatusBar(2);
-    SetStatusText(_T("Cairo Trend Plot Demonstration Program"));
+    SetStatusText(wxT("Cairo Trend Plot Demonstration Program"));
    
     // Connect the event handlers - the macros are such a nasty way
     // of doing this. This is better. 
@@ -157,8 +157,8 @@ wxMainForm::wxMainForm(const wxString& title,
    srand(1000);
    m_ticks = 0;
 
-    int handle = m_trend_plot->AddDataSet("one", *wxBLUE);
-    handle = m_trend_plot->AddDataSet("two", *wxGREEN);
+    int handle = m_trend_plot->AddDataSet(wxT("one"), *wxBLUE);
+    handle = m_trend_plot->AddDataSet(wxT("two"), *wxGREEN);
     m_trend_plot->ShowLegend(true);
     m_trend_plot->UpdatePlot();
    
@@ -237,10 +237,10 @@ void wxMainForm::OnQuit(wxCommandEvent& WXUNUSED(event))
 //+-------------------------------------------------------------------------------
 void wxMainForm::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(_T("Welcome to wxTrendPlanel Demo Program\n")
-                 _T("This is a demonstration program showing how to\n")
-                 _T("use the wxTrendPlot program."),
-                 _T("wxTrendPlot Demo"),
+    wxMessageBox(wxT("Welcome to wxTrendPlanel Demo Program\n")
+                 wxT("This is a demonstration program showing how to\n")
+                 wxT("use the wxTrendPlot program."),
+                 wxT("wxTrendPlot Demo"),
                  wxOK | wxICON_INFORMATION,
                  this);
 }

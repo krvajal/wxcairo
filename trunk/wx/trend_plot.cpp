@@ -124,28 +124,28 @@ wxTrendPlot::wxTrendPlot(wxWindow* parent,
             wxMouseEventHandler(wxTrendPlot::OnMouseDClick));
 
     // Create the popup menus and populate them
-    m_popup_menu = new wxMenu("");
-    wxMenuItem* item = m_popup_menu->AppendRadioItem(wxID_ANY, "Native");
+    m_popup_menu = new wxMenu(wxT(""));
+    wxMenuItem* item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Native"));
     m_menu_native_render = item->GetId();
-    item = m_popup_menu->AppendRadioItem(wxID_ANY, "Cairo Buffer");
+    item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Cairo Buffer"));
     m_menu_cairo_render_buffer = item->GetId();
-    item = m_popup_menu->AppendRadioItem(wxID_ANY, "Cairo Native");
+    item = m_popup_menu->AppendRadioItem(wxID_ANY, wxT("Cairo Native"));
     m_menu_cairo_render_native = item->GetId();
     
     m_popup_menu->Check(m_menu_cairo_render_native, true);
     SetRenderer(RENDER_CAIRO_NATIVE);
     
-    item = m_popup_menu->Append(wxID_ANY, "Zoom in");
+    item = m_popup_menu->Append(wxID_ANY, wxT("Zoom in"));
     m_menu_zoomin = item->GetId();
-    item = m_popup_menu->Append(wxID_ANY, "Zoom out");
+    item = m_popup_menu->Append(wxID_ANY, wxT("Zoom out"));
     m_menu_zoomout = item->GetId();
-    item = m_popup_menu->AppendCheckItem(wxID_ANY, "Pause");
+    item = m_popup_menu->AppendCheckItem(wxID_ANY, wxT("Pause"));
     m_menu_pause = item->GetId();
-    item = m_popup_menu->Append(wxID_ANY, "Configure");
+    item = m_popup_menu->Append(wxID_ANY, wxT("Configure"));
     m_menu_plotconfig = item->GetId();
     
-    m_delete_menu = new wxMenu("");
-    item = m_popup_menu->Append(wxID_ANY, "Delete", m_delete_menu);
+    m_delete_menu = new wxMenu(wxT(""));
+    item = m_popup_menu->Append(wxID_ANY, wxT("Delete"), m_delete_menu);
     m_menu_delete_submenu = item->GetId();
    
     // Setup the internal plot control variables 
@@ -159,10 +159,10 @@ wxTrendPlot::wxTrendPlot(wxWindow* parent,
     
     m_show_title = false;
     m_show_x_axis_title = false;
-    m_x_axis_title = "Time (s)";
+    m_x_axis_title = wxT("Time (s)");
     
     m_show_y_axis_title = false;
-    m_y_axis_title = "Value";
+    m_y_axis_title = wxT("Value");
     
     m_show_legend = false;
     
@@ -195,19 +195,19 @@ wxTrendPlot::~wxTrendPlot(void)
 //|    None.
 //|
 //+------------------------------------------------------------------------------
-void wxTrendPlot::SetStatusText(const char* text)
+void wxTrendPlot::SetStatusText(const wxString& text)
 {
-    m_statusbar_owner->SetStatusText(_T(text));
+    m_statusbar_owner->SetStatusText(text);
 }
 
-size_t wxTrendPlot::AddDataSet(const char* label, wxColour color)
+size_t wxTrendPlot::AddDataSet(const wxString& label, wxColour color)
 {
     wxTrendPlotDataset data;
     data.m_color = color;
     data.m_label = label;
     
     
-    wxMenuItem* item = m_delete_menu->Append(wxID_ANY, label);
+    wxMenuItem* item = m_delete_menu->Append(wxID_ANY, wxString(label));
     data.m_delete_menu_id = item->GetId();
     m_popup_menu->Enable(m_menu_delete_submenu, true);
     
@@ -359,12 +359,12 @@ void wxTrendPlot::Pause(bool pause)
 
     if(m_is_paused)
     {
-        SetStatusText("Paused");
+        SetStatusText(wxT("Paused"));
         m_pause_point = m_start_plot_x;
     }
     else
     {
-        SetStatusText("");
+        SetStatusText(wxT(""));
     }
 
     m_popup_menu->Check(m_menu_pause, pause);
@@ -468,7 +468,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
             for(size_t index = 0; index < m_data_sets.size(); index++)
             {
                 cairo_text_extents (cairo_image,
-                                    m_data_sets[index].m_label.c_str(),
+                                    m_data_sets[index].m_label.char_str(),
                                     &extents);  
                 
                 if(extents.width > text_extent)
@@ -634,7 +634,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
                           rect.y + rect.height - (bottom_pad/2));
             cairo_set_source_rgb (cairo_image,
                               0, 0, 0);
-            cairo_show_text (cairo_image, wxString::Format("%2.2f", start_x + x).c_str());
+            cairo_show_text (cairo_image, wxString::Format(wxT("%2.2f"), start_x + x).char_str());
         
             cairo_set_source_rgb (cairo_image,
                               0xA0/256.0, 0xA0/256.0, 0xA0/256.0);
@@ -654,7 +654,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
                           rect.y + top_pad + 2 + count * ((rect.height - top_pad - bottom_pad)/(1.0*number_y_data_points)));
             cairo_set_source_rgb (cairo_image,
                               0, 0, 0);
-            cairo_show_text (cairo_image, wxString::Format("%2.2f", y).c_str());
+            cairo_show_text (cairo_image, wxString::Format(wxT("%2.2f"), y).char_str());
 
             cairo_move_to(cairo_image,
                           rect.x + left_pad - 4, 
@@ -678,13 +678,13 @@ void wxTrendPlot::Draw(bool     use_cairo,
             // so that we can subtract half the width in order
             // to center it.
             cairo_text_extents (cairo_image,
-                                m_title.c_str(),
+                                m_title.char_str(),
                                 &extents);  
 
             cairo_move_to(cairo_image,
                           rect.width/2 - extents.width/2,
                           rect.y + 21);
-            cairo_show_text(cairo_image, m_title.c_str());
+            cairo_show_text(cairo_image, m_title.char_str());
         }
        
         cairo_set_font_size (cairo_image, 8 + 2);
@@ -702,7 +702,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
             printf("Zoom factor: %f\n", m_zoom_factor);
 
             cairo_move_to(cairo_image, rect.width - 80, rect.y + 25);
-            cairo_show_text(cairo_image, wxString::Format("Zoom: %.1f%%", m_zoom_factor * 100).c_str());
+            cairo_show_text(cairo_image, wxString::Format(wxT("Zoom: %.1f%%"), m_zoom_factor * 100).char_str());
             cairo_stroke(cairo_image);
         }
         
@@ -711,7 +711,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
         if(m_show_x_axis_title)
         {
             cairo_move_to(cairo_image,rect.width/2, rect.y + rect.height - 8); 
-            cairo_show_text(cairo_image, m_x_axis_title.c_str());
+            cairo_show_text(cairo_image, m_x_axis_title.char_str());
         }
         
         if(m_show_y_axis_title)
@@ -719,7 +719,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
             cairo_move_to(cairo_image, rect.x + 15, rect.y + rect.height/2);
             cairo_save(cairo_image);
             cairo_rotate(cairo_image, -90/57.2957795);
-            cairo_show_text(cairo_image, m_y_axis_title.c_str());
+            cairo_show_text(cairo_image, m_y_axis_title.char_str());
             cairo_restore(cairo_image);
         }
         
@@ -793,7 +793,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
                             x, y, 15, 15);
                 cairo_fill(cairo_image);
                 cairo_move_to(cairo_image,x+18,y+12);
-                cairo_show_text(cairo_image, m_data_sets[index].m_label.c_str());
+                cairo_show_text(cairo_image, m_data_sets[index].m_label.char_str());
                 y += 18;
                 height += 18;
             }
@@ -854,7 +854,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
             wxCoord width;
             wxCoord height;
             
-            dc->GetTextExtent("Legend:",
+            dc->GetTextExtent(wxT("Legend:"),
                              &width, &height, 0, 0, &font);
                 
             if(width > text_extent)
@@ -864,7 +864,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
                 
             for(size_t index = 0; index < m_data_sets.size(); index++)
             {
-                dc->GetTextExtent(m_data_sets[index].m_label.c_str(),
+                dc->GetTextExtent(m_data_sets[index].m_label,
                                  &width, &height, 0, 0, &font);
                 
                 if(width > text_extent)
@@ -993,7 +993,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
         for(int count = 0; count <= number_x_data_points; count++)
         {
             double x = (x_range/number_x_data_points) * count; 
-            dc->DrawText(wxString::Format("%2.2f", start_x + x),
+            dc->DrawText(wxString::Format(wxT("%2.2f"), start_x + x),
                         rect.x + left_pad - 8 + count * ((rect.width - left_pad - right_pad)/(1.0*number_x_data_points)),
                         rect.y + rect.height - (bottom_pad/2) - 10);
         
@@ -1015,7 +1015,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
                         rect.y + top_pad + count * ((rect.height - top_pad - bottom_pad)/(1.0*number_y_data_points)));
         
             double y = y_range - ((y_range/number_y_data_points) * count);
-            dc->DrawText(wxString::Format("%2.2f", y),
+            dc->DrawText(wxString::Format(wxT("%2.2f"), y),
                         rect.x + left_pad - 30,
                         rect.y + top_pad - 8 + count * ((rect.height - top_pad - bottom_pad)/(1.0*number_y_data_points)));
         }
@@ -1027,7 +1027,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
         
         if(m_show_title)
         {
-            dc->DrawText(m_title.c_str(), rect.width/2, rect.y + 10);
+            dc->DrawText(m_title, rect.width/2, rect.y + 10);
         }
         
         font.SetFamily(wxFONTFAMILY_ROMAN);
@@ -1036,12 +1036,12 @@ void wxTrendPlot::Draw(bool     use_cairo,
         
         if(m_show_x_axis_title)
         {
-            dc->DrawText(m_x_axis_title.c_str(), rect.width/2, rect.y + rect.height - 16);
+            dc->DrawText(m_x_axis_title, rect.width/2, rect.y + rect.height - 16);
         }
         
         if(m_show_y_axis_title)
         {
-            dc->DrawRotatedText(m_y_axis_title.c_str(), rect.x + 2, rect.y + rect.height/2, 90);
+            dc->DrawRotatedText(m_y_axis_title, rect.x + 2, rect.y + rect.height/2, 90);
         }
         
         dc->SetTextForeground(wxColour(0xA0, 0xA0, 0xA0));
@@ -1050,12 +1050,12 @@ void wxTrendPlot::Draw(bool     use_cairo,
         {
             pen.SetColour(0xA0, 0xA0, 0xA0);
             dc->SetPen(pen);
-            dc->DrawText("Paused", rect.width - 80, rect.y + 5);
+            dc->DrawText(wxT("Paused"), rect.width - 80, rect.y + 5);
         }
         
         if(m_zoom_factor != 1.0)
         {
-            dc->DrawText(wxString::Format("Zoom: %.1f%%", m_zoom_factor * 100), rect.width - 80, rect.y + 15);
+            dc->DrawText(wxString::Format(wxT("Zoom: %.1f%%"), m_zoom_factor * 100), rect.width - 80, rect.y + 15);
         }
         
         
@@ -1068,7 +1068,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
             dc->SetBrush(wxColour(0xE0, 0xE0, 0xE0));
             dc->DrawRectangle(rect.x + rect.width - right_pad + 5, y, right_pad - 8, 18);
             dc->SetTextForeground(wxColour(0x0, 0x0, 0x0));
-            dc->DrawText("Legend:", x, y);
+            dc->DrawText(wxT("Legend:"), x, y);
             
             dc->SetTextForeground(wxColour(0xA0, 0xA0, 0xA0));
             int save_y = y;
@@ -1091,7 +1091,7 @@ void wxTrendPlot::Draw(bool     use_cairo,
                 dc->SetBrush(m_data_sets[index].m_color);
                 
                 dc->DrawRectangle(x, y, 15, 15);
-                dc->DrawText(m_data_sets[index].m_label.c_str(), x + 18, y);
+                dc->DrawText(m_data_sets[index].m_label, x + 18, y);
                 y += 18;
                 height += 18;
             }
@@ -1266,7 +1266,7 @@ void wxTrendPlot::OnPaint(wxPaintEvent &WXUNUSED(event))
             cairo_destroy(cairo_image);
             
 #elif defined(__WXGTK__)
-            SetStatusText("Rendering directly to GDK surface using Cairo");
+            SetStatusText(wxT("Rendering directly to GDK surface using Cairo"));
 
             // If it's GTK then use the gdk_cairo_create() method. The GdkDrawable object
             // is stored in m_window of the wxPaintDC.

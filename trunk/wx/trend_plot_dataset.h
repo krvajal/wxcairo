@@ -8,7 +8,7 @@
 class wxTrendPlotDataset
 {
     public:
-        std::string              m_label;
+        wxString                 m_label;
         std::map<double, double> m_points;
         wxColour                 m_color;
         
