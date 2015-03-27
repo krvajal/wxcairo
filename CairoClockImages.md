@@ -1,0 +1,11 @@
+## Cairo Clock Demo ##
+
+### Rendered with Cairo ###
+The following image shows the wxCairoClock demo program rendered on Vista using Cairo:
+
+![http://wxcairo.googlecode.com/files/win32_clock_with_cairo.jpg](http://wxcairo.googlecode.com/files/win32_clock_with_cairo.jpg)
+
+### Rendered without Cairo ###
+The following image shows the wxCairoClock demo program rendered on Vista using the native canvas:
+
+![http://wxcairo.googlecode.com/files/win32_clock_without_cairo.jpg](http://wxcairo.googlecode.com/files/win32_clock_without_cairo.jpg)

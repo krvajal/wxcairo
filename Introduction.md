@@ -1,0 +1,11 @@
+# Introduction #
+
+This project is intended to demonstrate how you can mix the Cairo graphics library with wxWidgets.
+
+
+# Details #
+
+By taking advantage of Cairo instead of using the native DC objects you can create portable external classes built around Cairo that can be used in other projects while at the same time taking advantage of the anti-aliasing available in Cairo.
+
+# Build Instructions #
+[Compiling in Ubuntu](http://code.google.com/p/wxcairo/wiki/ComilingInUbuntu)
